@@ -1,0 +1,26 @@
+name: Deploy to Firebase Function on push to master
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "functions/**"
+      - ".firebaserc"
+      - "firebase.json"
+      - ".github/workflows/firebase-hosting.yml"
+jobs:
+  staging-web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web-app
+    # TODO: Fill in environment variables once set up
+    # env:
+    #   KEY: '${{ VALUE }}'
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install
+      - name: Create SA key
+        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
+      - name: Deploy Cloud Functions
+        run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npm run deploy
