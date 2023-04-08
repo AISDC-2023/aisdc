@@ -1,6 +1,6 @@
 ---
-name: Scrum Task Template
-about: Describe this issue template's purpose here.
+name: Scrum Task
+about: Describe the changes proposed and how to implement them.
 title: ''
 labels: ''
 assignees: ''
@@ -8,9 +8,11 @@ assignees: ''
 ---
 
 ### Overview
-- 
+
+
 ---
-### To-Do
+#### To-Do
 - [ ] 
-### Acceptance Criteria
+
+#### Acceptance Criteria
 - [ ]
