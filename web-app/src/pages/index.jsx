@@ -1,5 +1,4 @@
 import { HeadMeta } from '@/components/HeadMeta'
-import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { Hero } from '@/components/index/Hero'
 import { Schedule } from '@/components/index/Schedule'
@@ -17,7 +16,6 @@ export default function Home() {
         <Schedule />
         <Sponsors />
       </main>
-      <Footer />
     </>
   )
 }
