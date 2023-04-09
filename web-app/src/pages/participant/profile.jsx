@@ -7,7 +7,7 @@ export default function Profile({ profile }) {
       <HeadMeta />
       <Header />
       <main>
-
+        { profile.id }
       </main>
     </>
   )
@@ -15,9 +15,9 @@ export default function Profile({ profile }) {
 
 export async function getStaticProps() {
   // Call an external API endpoint to get posts
-  const res = await fetch('https://.../posts')
+  const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
   const profile = await res.json()
-
+  console.log(profile)
   return {
     props: {
       profile,
