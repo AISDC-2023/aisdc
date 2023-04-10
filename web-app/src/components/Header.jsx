@@ -1,10 +1,13 @@
+import { useRouter } from 'next/router'
 import { Container } from '@/components/index/Container'
 import { DiamondIcon } from '@/components/index/DiamondIcon'
 import { Logo } from '@/components/Logo'
 
 export function Header() {
+  const router = useRouter()
+
   function goHome() {
-    window.location.href = '/'
+    router.push('/')
   }
 
   return (

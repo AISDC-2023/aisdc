@@ -1,14 +1,5 @@
-import { HeadMeta } from '@/components/HeadMeta'
-import { Header } from '@/components/Header'
-
 export default function Profile({ profile }) {
-  return (
-    <>
-      <HeadMeta />
-      <Header />
-      <main>{profile.id}</main>
-    </>
-  )
+  return <>{profile.id}</>
 }
 
 export async function getStaticProps() {

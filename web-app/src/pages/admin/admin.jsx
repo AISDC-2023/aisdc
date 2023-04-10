@@ -1,10 +1,10 @@
-import { HeadMeta } from '@/components/HeadMeta'
+import { Head } from '@/components/Head'
 import { Header } from '@/components/Header'
 
 export default function Admin() {
   return (
     <>
-      <HeadMeta />
+      <Head />
       <Header />
       <main></main>
     </>

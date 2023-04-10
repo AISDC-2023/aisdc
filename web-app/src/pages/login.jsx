@@ -1,23 +1,52 @@
 import { useState } from 'react'
-import { HeadMeta } from '@/components/HeadMeta'
+import { useRouter } from 'next/router'
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Button } from '@/components/Button'
-import { Header } from '@/components/Header'
 import { Heading } from '@/components/Heading'
 import { Input } from '@/components/Input'
+import { Paragraph } from '@/components/Paragraph'
 
 export default function Login() {
   let [cid, setCid] = useState('')
+  let [authRes, setAuthRes] = useState('')
+  const router = useRouter()
 
   const handleCidChange = (newValue) => {
     setCid(newValue)
   }
 
+  async function handleSubmit(event) {
+    event.preventDefault()
+    // detect whether the result is a valid CID
+    const regex = /^cid/
+
+    if (regex.test(cid)) {
+      // send to server and redirect
+      await fetch('https://random-data-api.com/api/v2/users?size=1')
+        .then((res) => {
+          setAuthRes('s')
+          const profile = res.json()
+          switch (profile.id) {
+            case 'admin':
+              router.push('/admin')
+              break
+            case 'partner':
+              router.push('/partner')
+              break
+            default:
+              router.push('/participant')
+          }
+        })
+        .catch(() => {
+          setAuthRes('f')
+        })
+    } else {
+      setAuthRes('f')
+    }
+  }
+
   return (
     <>
-      <HeadMeta />
-      <Header />
-
       <ContainerMobile>
         <Heading headerType="h2" className="mt-6">
           SIGN IN
@@ -88,12 +117,12 @@ export default function Login() {
         </div>
 
         <div className="mt-6">
-          <form action="#" method="POST" className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <Input
               id="cid"
               label="Conference ID"
               type="text"
-              required="true"
+              required={true}
               value={cid}
               onChange={handleCidChange}
             />
@@ -101,6 +130,16 @@ export default function Login() {
               <Button className="w-full" type="submit">
                 Enter AI Playground
               </Button>
+              <Paragraph
+                className={authRes === 's' ? 'mt-1 text-green-600' : 'hidden'}
+              >
+                Authenticated! Redirecting...
+              </Paragraph>
+              <Paragraph
+                className={authRes === 'f' ? 'mt-1 text-red-600' : 'hidden'}
+              >
+                Conference ID is not valid. Please try another.
+              </Paragraph>
             </div>
           </form>
         </div>
