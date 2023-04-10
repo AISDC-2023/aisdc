@@ -24,13 +24,13 @@ const QRScanner = (props) => {
                   const profile = res.json()
                   switch (profile.id) {
                     case 'admin':
-                      router.push('/admin')
+                      router.push('/admin?cid=' + cid)
                       break
                     case 'partner':
-                      router.push('/partner')
+                      router.push('/partner?cid=' + cid)
                       break
                     default:
-                      router.push('/participant')
+                      router.push('/participant?cid=' + cid)
                   }
                 })
                 .catch(() => {
