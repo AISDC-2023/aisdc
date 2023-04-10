@@ -32,7 +32,7 @@ export default function Participant({ profile }) {
             optimized="true"
           />
         </div>
-  
+
         <Heading headerType="h2" className="text-center">
           LET THE GAMES BEGIN!
         </Heading>
@@ -57,8 +57,8 @@ export default function Participant({ profile }) {
             <StampsCounter count="10" />
             <Timeline />
             <p className="text-center font-mono text-xs text-blue-400">
-          {profile.uid}
-        </p>
+              {profile.uid}
+            </p>
           </div>
         </div>
       </ContainerMobile>

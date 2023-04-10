@@ -1,4 +1,8 @@
-import { CheckIcon, ArrowPathRoundedSquareIcon, CloudIcon } from '@heroicons/react/20/solid'
+import {
+  CheckIcon,
+  ArrowPathRoundedSquareIcon,
+  CloudIcon,
+} from '@heroicons/react/20/solid'
 import { Heading } from '@/components/Heading'
 
 export function Timeline() {
@@ -91,9 +95,9 @@ export function Timeline() {
     <section aria-labelledby="timeline-title">
       <div className="rounded-2xl bg-white px-4 py-5 shadow sm:px-6">
         <Heading id="timeline-title" headerType="h3">
-            YOUR ACTIVITY
+          YOUR ACTIVITY
         </Heading>
-           {/* Activity Feed */}
+        {/* Activity Feed */}
         <div className="mt-6 flow-root">
           <ul role="list" className="-mb-8">
             {timeline.map((item, itemIdx) => (
