@@ -5,6 +5,8 @@ import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
 import { Input } from '@/components/Input'
 import { Paragraph } from '@/components/Paragraph'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { CameraIcon, CommandLineIcon } from '@heroicons/react/24/solid'
 
 export default function Login() {
   let [cid, setCid] = useState('')
@@ -28,13 +30,13 @@ export default function Login() {
           const profile = res.json()
           switch (profile.id) {
             case 'admin':
-              router.push('/admin')
+              router.push('/admin?cid=' + cid)
               break
             case 'partner':
-              router.push('/partner')
+              router.push('/partner?cid=' + cid)
               break
             default:
-              router.push('/participant')
+              router.push('/participant?cid=' + cid)
           }
         })
         .catch(() => {
@@ -52,20 +54,8 @@ export default function Login() {
           SIGN IN
         </Heading>
         <p className="mt-2 inline-flex text-blue-600">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="mr-3 h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-            />
-          </svg>
+          <InformationCircleIcon className="mr-3 h-6 w-6" />
+
           <span>Find Conference ID at back of the pass</span>
         </p>
 
@@ -79,25 +69,7 @@ export default function Login() {
             >
               <span>Camera</span>
               <span className="sr-only">Sign in with QR</span>
-              <svg
-                className="ml-3 h-6 w-6"
-                aria-hidden="true"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
-                />
-              </svg>
+              <CameraIcon className="ml-3 h-6 w-6" />
             </Button>
           </div>
 
@@ -129,6 +101,7 @@ export default function Login() {
             <div>
               <Button className="w-full" type="submit">
                 Enter AI Playground
+                <CommandLineIcon className="ml-3 h-6 w-6" />
               </Button>
               <Paragraph
                 className={authRes === 's' ? 'mt-1 text-green-600' : 'hidden'}
