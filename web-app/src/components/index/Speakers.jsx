@@ -217,7 +217,7 @@ export function Speakers() {
                     <div className="relative">
                       <div
                         className={clsx(
-                          'font-mono text-sm',
+                          'font-mono',
                           dayIndex === selectedIndex
                             ? 'text-blue-600'
                             : 'text-slate-500'

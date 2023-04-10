@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write src/"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
@@ -19,6 +20,8 @@
     "postcss-focus-visible": "^6.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-qr-reader": "^3.0.0-beta-1",
+    "react-qr-scanner": "^1.0.0-alpha.11",
     "tailwindcss": "^3.3.0"
   },
   "devDependencies": {
@@ -26,5 +29,11 @@
     "eslint-config-next": "13.0.2",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.6"
+  },
+  "overrides": {
+    "react-qr-reader": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }

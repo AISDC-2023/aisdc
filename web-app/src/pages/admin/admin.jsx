@@ -6,9 +6,7 @@ export default function Admin() {
     <>
       <HeadMeta />
       <Header />
-      <main>
-
-      </main>
+      <main></main>
     </>
   )
 }

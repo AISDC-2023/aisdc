@@ -33,15 +33,8 @@ export function Hero() {
               from a mile away, and they certainly aren’t accepting any checks
               from Western Union.
             </p>
-            <p>
-              At DeceptiConf you’ll learn about the latest dark patterns being
-              developed to trick even the smartest visitors, and you’ll learn
-              how to deploy them without ever being detected.
-            </p>
           </div>
-          <Button href="#" className="mt-10 w-full sm:hidden">
-            Get your tickets
-          </Button>
+          <Button href="/login" className="w-full mt-10">Enter</Button>
           <dl className="mt-10 grid grid-cols-2 gap-x-10 gap-y-6 sm:mt-16 sm:gap-x-16 sm:gap-y-10 sm:text-center lg:auto-cols-auto lg:grid-flow-col lg:grid-cols-none lg:justify-start lg:text-left">
             {[
               ['Speakers', '18'],
@@ -50,7 +43,7 @@ export function Hero() {
               ['Location', 'Los Angeles'],
             ].map(([name, value]) => (
               <div key={name}>
-                <dt className="font-mono text-sm text-blue-600">{name}</dt>
+                <dt className="font-mono text-blue-600">{name}</dt>
                 <dd className="mt-0.5 text-2xl font-semibold tracking-tight text-blue-900">
                   {value}
                 </dd>

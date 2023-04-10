@@ -6,9 +6,7 @@ export default function Partner() {
     <>
       <HeadMeta />
       <Header />
-      <main>
-
-      </main>
+      <main></main>
     </>
   )
 }

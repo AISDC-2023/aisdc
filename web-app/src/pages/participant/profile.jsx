@@ -6,9 +6,7 @@ export default function Profile({ profile }) {
     <>
       <HeadMeta />
       <Header />
-      <main>
-        { profile.id }
-      </main>
+      <main>{profile.id}</main>
     </>
   )
 }

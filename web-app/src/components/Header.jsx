@@ -1,4 +1,3 @@
-import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { DiamondIcon } from '@/components/index/DiamondIcon'
 import { Logo } from '@/components/Logo'
@@ -18,9 +17,6 @@ export function Header() {
             <DiamondIcon className="h-1.5 w-1.5 overflow-visible fill-current stroke-current" />
             <p>Event Hall 1-2, Lifelong Learning Institute</p>
           </div>
-        </div>
-        <div className="hidden sm:mt-10 sm:flex lg:mt-0 lg:grow lg:basis-0 lg:justify-end">
-          <Button href="/login">Login</Button>
         </div>
       </Container>
     </header>
