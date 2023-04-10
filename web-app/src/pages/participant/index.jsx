@@ -4,8 +4,8 @@ import { Button } from '@/components/Button'
 import { CameraIcon, GiftIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import globeGif from '@/images/globe-spinning.gif'
-import { StampsCounter } from '@/components/participant/stamps-counter'
-import { Timeline } from '@/components/Participant/Timeline'
+import { StampsCounter } from '@/components/participant/StampsCounter'
+import { Timeline } from '@/components/participant/Timeline'
 
 export async function getStaticProps() {
   // Call an external API endpoint to get posts
