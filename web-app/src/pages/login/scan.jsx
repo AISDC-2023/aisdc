@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { HeadMeta } from '@/components/HeadMeta'
 import { Button } from '@/components/Button'
 import { Header } from '@/components/Header'
+import { Heading } from '@/components/Heading'
 import { QrReader } from 'react-qr-reader'
 
 const QRScanner = (props) => {
@@ -18,9 +19,11 @@ const QRScanner = (props) => {
 
             if (regex.test(result)) {
               // send to server and redirect
-              const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
+              const res = await fetch(
+                'https://random-data-api.com/api/v2/users?size=1'
+              )
               const profile = await res.json()
-            
+
               switch (profile.id) {
                 case 'admin':
                   window.location.href = '/admin'
@@ -30,9 +33,9 @@ const QRScanner = (props) => {
                   break
                 default:
                   window.location.href = '/participant'
+              }
             }
           }
-        }
           if (!!error) {
             console.info(error)
           }
@@ -53,9 +56,9 @@ export default function Scan() {
           <div className="mx-auto flex flex-1 flex-col justify-center px-4 py-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
             <div className="mx-auto w-full max-w-sm lg:w-96">
               <div>
-                <h2 className="mt-6 text-3xl font-bold tracking-tight text-blue-900">
-                  Scan QR
-                </h2>
+                <Heading headerType="h2" className="mt-6">
+                  SCAN QR
+                </Heading>
                 <p className="mt-2 inline-flex text-blue-600">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

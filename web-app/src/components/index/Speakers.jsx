@@ -2,8 +2,9 @@ import { useEffect, useId, useState } from 'react'
 import Image from 'next/image'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
-
-import { Container } from '@/components/Container'
+import { Heading } from '@/components/Heading'
+import { Paragraph } from '@/components/Paragraph'
+import { Container } from '@/components/index/Container'
 import { DiamondIcon } from '@/components/index/DiamondIcon'
 import andrewGreeneImage from '@/images/avatars/andrew-greene.jpg'
 import cathleneBurrageImage from '@/images/avatars/cathlene-burrage.jpg'
@@ -184,16 +185,12 @@ export function Speakers() {
       <ImageClipPaths id={id} />
       <Container>
         <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2
-            id="speakers-title"
-            className="text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl"
-          >
+          <Heading headerType="h2" id="speakers-title">
             Speakers
-          </h2>
-          <p className="mt-4 text-2xl tracking-tight text-blue-900">
+          </Heading>
+          <Paragraph className="mt-4 text-2xl">
             Learn from the experts on the cutting-edge of deception at the most
-            sinister companies.
-          </p>
+          </Paragraph>
         </div>
         <Tab.Group
           as="div"
@@ -273,12 +270,12 @@ export function Speakers() {
                         />
                       </div>
                     </div>
-                    <h3 className="mt-8 text-xl font-bold tracking-tight text-slate-900">
+                    <Heading headerType="h3" className="mt-8">
                       {speaker.name}
-                    </h3>
-                    <p className="mt-1 text-base tracking-tight text-slate-500">
+                    </Heading>
+                    <Paragraph className="mt-1 text-base">
                       {speaker.role}
-                    </p>
+                    </Paragraph>
                   </div>
                 ))}
               </Tab.Panel>

@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
+import { Heading } from '@/components/Heading'
 
-import { Container } from '@/components/Container'
+import { Container } from '@/components/index/Container'
 import backgroundImage from '@/images/background.jpg'
 
 const schedule = [
@@ -107,56 +108,6 @@ const schedule = [
       },
     ],
   },
-  {
-    date: 'April 6',
-    dateTime: '2022-04-06',
-    summary:
-      'We close out the event previewing new techniques that are still in development.',
-    timeSlots: [
-      {
-        name: 'Andrew Greene',
-        description: 'Neuralink dark patterns',
-        start: '9:00AM',
-        end: '10:00AM',
-      },
-      {
-        name: 'Heather Terry',
-        description: 'DALL-E for passports',
-        start: '10:00AM',
-        end: '11:00AM',
-      },
-      {
-        name: 'Piers Wilkins',
-        description: 'Quantum password cracking',
-        start: '11:00AM',
-        end: '12:00PM',
-      },
-      {
-        name: 'Lunch',
-        description: null,
-        start: '12:00PM',
-        end: '1:00PM',
-      },
-      {
-        name: 'Gordon Sanderson',
-        description: 'SkyNet is coming',
-        start: '1:00PM',
-        end: '2:00PM',
-      },
-      {
-        name: 'Kimberly Parsons',
-        description: 'Dark patterns for the metaverse',
-        start: '2:00PM',
-        end: '3:00PM',
-      },
-      {
-        name: 'Richard Astley',
-        description: 'Knowing the game and playing it',
-        start: '3:00PM',
-        end: '4:00PM',
-      },
-    ],
-  },
 ]
 
 function ScheduleTabbed() {
@@ -225,9 +176,9 @@ function ScheduleTabbed() {
 function DaySummary({ day }) {
   return (
     <>
-      <h3 className="text-2xl font-semibold tracking-tight text-blue-900">
+      <Heading headerType="h3" className="font-semibold">
         <time dateTime={day.dateTime}>{day.date}</time>
-      </h3>
+      </Heading>
       <p className="mt-1.5 text-base tracking-tight text-blue-900">
         {day.summary}
       </p>
@@ -252,9 +203,7 @@ function TimeSlots({ day, className }) {
           {timeSlotIndex > 0 && (
             <div className="mx-auto mb-8 h-px w-48 bg-indigo-500/10" />
           )}
-          <h4 className="text-lg font-semibold tracking-tight text-blue-900">
-            {timeSlot.name}
-          </h4>
+          <Heading headerType="h4">{timeSlot.name}</Heading>
           {timeSlot.description && (
             <p className="mt-1 tracking-tight text-blue-900">
               {timeSlot.description}
@@ -294,10 +243,7 @@ export function Schedule() {
     <section id="schedule" aria-label="Schedule" className="py-20 sm:py-32">
       <Container className="relative z-10">
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-4xl lg:pr-24">
-          <h2 className="text-4xl font-medium tracking-tighter text-blue-600 sm:text-5xl">
-            Our three day schedule is jam-packed with brilliant, creative, evil
-            geniuses.
-          </h2>
+          <Heading headerType="h2">Schedule</Heading>
           <p className="mt-4 text-2xl tracking-tight text-blue-900">
             The worst people in our industry giving the best talks you’ve ever
             seen. Nothing will be recorded and every attendee has to sign an NDA

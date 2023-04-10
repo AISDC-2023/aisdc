@@ -1,40 +1,28 @@
-import Image from 'next/image'
-
+import { Paragraph } from '@/components/Paragraph'
+import { Heading } from '@/components/Heading'
 import { Button } from '@/components/Button'
-import { Container } from '@/components/Container'
-import backgroundImage from '@/images/background.jpg'
+import { Container } from '@/components/index/Container'
 
 export function Hero() {
   return (
-    <div className="relative pb-20 pt-10 sm:py-24">
-      <div className="absolute inset-x-0 -bottom-14 -top-48 overflow-hidden bg-indigo-50">
-        <Image
-          className="absolute left-0 top-0 translate-x-[-55%] translate-y-[-10%] -scale-x-100 sm:left-1/2 sm:translate-x-[-98%] sm:translate-y-[-6%] lg:translate-x-[-106%] xl:translate-x-[-122%]"
-          src={backgroundImage}
-          alt=""
-          width={918}
-          height={1495}
-          priority
-          unoptimized
-        />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white" />
-      </div>
+    <div className="relative pb-20 pt-10">
       <Container className="relative">
         <div className="mx-auto max-w-2xl lg:max-w-4xl lg:px-12">
-          <h1 className="text-5xl font-bold tracking-tighter text-blue-600 sm:text-7xl">
+          <Heading headerType="h1">
             <span className="sr-only">DeceptiConf - </span>A design conference
             for the dark side.
-          </h1>
-          <div className="mt-6 space-y-6 text-2xl tracking-tight text-blue-900">
-            <p>
+          </Heading>
+          <div className="mt-6 space-y-6">
+            <Paragraph className="text-2xl text-orange-600">
               The next generation of web users are tech-savvy and suspicious.
               They know how to use dev tools, they can detect a phishing scam
               from a mile away, and they certainly aren’t accepting any checks
               from Western Union.
-            </p>
+            </Paragraph>
           </div>
-          <Button href="/login" className="w-full mt-10">Enter</Button>
+          <Button href="/login" className="mt-10 w-full">
+            Enter
+          </Button>
           <dl className="mt-10 grid grid-cols-2 gap-x-10 gap-y-6 sm:mt-16 sm:gap-x-16 sm:gap-y-10 sm:text-center lg:auto-cols-auto lg:grid-flow-col lg:grid-cols-none lg:justify-start lg:text-left">
             {[
               ['Speakers', '18'],
