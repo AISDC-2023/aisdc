@@ -9,8 +9,8 @@ export default function Scan() {
   const [data, setData] = useState('No result')
   let [ticketRes, setTicketRes] = useState('')
   let [msg, setMsg] = useState('')
-  
-  const QRScanner = (props) => {  
+
+  const QRScanner = (props) => {
     return (
       <>
         <QrReader
@@ -19,7 +19,7 @@ export default function Scan() {
               setData(result?.text)
               // detect whether the result is a valid CID
               const regex = /^aisdc/
-  
+
               if (regex.test(result)) {
                 await fetch('https://random-data-api.com/api/v2/users?size=1')
                   .then((res) => {
@@ -68,15 +68,15 @@ export default function Scan() {
         </p>
         <QRScanner></QRScanner>
         <Paragraph
-                className={ticketRes === 's' ? 'mt-1 text-green-600' : 'hidden'}
-              >
-                { msg }
-              </Paragraph>
-              <Paragraph
-                className={ticketRes === 'f' ? 'mt-1 text-red-600' : 'hidden'}
-              >
-                Invalid. Please try another.
-              </Paragraph>
+          className={ticketRes === 's' ? 'mt-1 text-green-600' : 'hidden'}
+        >
+          {msg}
+        </Paragraph>
+        <Paragraph
+          className={ticketRes === 'f' ? 'mt-1 text-red-600' : 'hidden'}
+        >
+          Invalid. Please try another.
+        </Paragraph>
         <Button href="/participant" className="w-full">
           Back
         </Button>

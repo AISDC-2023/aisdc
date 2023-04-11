@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Paragraph } from '@/components/Paragraph'
+import { TicketIcon } from '@heroicons/react/24/solid'
 
 export function StampsCounter(props) {
   const [currentCount, setCurrentCount] = useState(0)
@@ -23,8 +24,10 @@ export function StampsCounter(props) {
   return (
     <div>
       <Paragraph className="text-center">You have: </Paragraph>
-      <Paragraph className="text-center text-3xl font-medium">
-        <span className="text-orange-600">{currentCount}</span> stamps
+      <Paragraph className="flex justify-center text-center text-3xl font-medium">
+        <span className="mr-2 text-orange-600">{currentCount}</span>{' '}
+        <span>stamps</span>
+        <TicketIcon className="ml-3 h-8 w-8 -rotate-45" />
       </Paragraph>
     </div>
   )

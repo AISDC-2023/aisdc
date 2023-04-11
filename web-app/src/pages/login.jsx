@@ -53,10 +53,11 @@ export default function Login() {
         <Heading headerType="h2" className="mt-6">
           SIGN IN
         </Heading>
-        <p className="mt-2 inline-flex text-blue-600">
-          <InformationCircleIcon className="mr-3 h-6 w-6" />
-
-          <span>Find Conference ID at back of the pass</span>
+        <p className="mt-2 text-blue-600">
+          <span className="inline-flex items-center">
+            <InformationCircleIcon className="mr-3 h-6 w-6" />
+            Find Conference ID at back of the pass
+          </span>
         </p>
 
         <div className="mt-8">

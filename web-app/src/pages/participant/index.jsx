@@ -8,6 +8,81 @@ import { StampsCounter } from '@/components/participant/StampsCounter'
 import { Timeline } from '@/components/participant/Timeline'
 
 export async function getStaticProps() {
+  const activity = [
+    {
+      id: 1,
+      type: 'applied',
+      content: 'Applied to',
+      target: 'Front End Developer',
+      date: 'Sep 20',
+      datetime: '2020-09-20',
+    },
+    {
+      id: 2,
+      type: 'redeemed',
+      content: 'redeemed to phone screening by',
+      target: 'Bethany Blake',
+      date: 'Sep 22',
+      datetime: '2020-09-22',
+    },
+    {
+      id: 3,
+      type: 'completed',
+      content: 'Completed phone screening with',
+      target: 'Martha Gardner',
+      date: 'Sep 28',
+      datetime: '2020-09-28',
+    },
+    {
+      id: 4,
+      type: 'redeemed',
+      content: 'redeemed to interview by',
+      target: 'Bethany Blake',
+      date: 'Sep 30',
+      datetime: '2020-09-30',
+    },
+    {
+      id: 40,
+      type: 'redeemed',
+      content: 'redeemed to interview by',
+      target: 'Bethany Blake',
+      date: 'Sep 30',
+      datetime: '2020-09-30',
+    },
+    {
+      id: 674,
+      type: 'redeemed',
+      content: 'redeemed to interview by',
+      target: 'Bethany Blake',
+      date: 'Sep 30',
+      datetime: '2020-09-30',
+    },
+    {
+      id: 5674,
+      type: 'redeemed',
+      content: 'redeemed to interview by',
+      target: 'Bethany Blake',
+      date: 'Sep 30',
+      datetime: '2020-09-30',
+    },
+    {
+      id: 5764,
+      type: 'redeemed',
+      content: 'redeemed to interview by',
+      target: 'Bethany Blake',
+      date: 'Sep 30',
+      datetime: '2020-09-30',
+    },
+    {
+      id: 5,
+      type: 'completed',
+      content: 'Completed interview with',
+      target: 'Katherine Snyder',
+      date: 'Oct 4',
+      datetime: '2020-10-04',
+    },
+  ]
+
   // Call an external API endpoint to get posts
   const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
   const profile = await res.json()
@@ -15,11 +90,12 @@ export async function getStaticProps() {
   return {
     props: {
       profile,
+      activity,
     },
   }
 }
 
-export default function Participant({ profile }) {
+export default function Participant({ profile, activity }) {
   return (
     <>
       <ContainerMobile>
@@ -55,7 +131,7 @@ export default function Participant({ profile }) {
               <GiftIcon className="ml-3 h-6 w-6" />
             </Button>
             <StampsCounter count="10" />
-            <Timeline />
+            <Timeline title="YOUR ACTIVITY" timeline={activity} />
             <p className="text-center font-mono text-xs text-blue-400">
               {profile.uid}
             </p>
