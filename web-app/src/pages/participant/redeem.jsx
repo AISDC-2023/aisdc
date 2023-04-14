@@ -3,7 +3,8 @@ import { Heading } from '@/components/Heading'
 import Image from 'next/image'
 import hologramGif from '@/images/hologram.gif'
 import { StampsCounter } from '@/components/participant/StampsCounter'
-import { SpinningWheel } from '@/components/participant/SpinningWheel'
+import { Prize } from '@/components/participant/Prize'
+import { Prizes } from '@/components/participant/Prizes'
 import { Timeline } from '@/components/participant/Timeline'
 
 export async function getStaticProps() {
@@ -42,6 +43,18 @@ export async function getStaticProps() {
     },
   ]
 
+  const prizes = [
+    {
+      id: 4,
+      name: 'Prize 1',
+      available: true
+    },
+    {
+      id: 40,
+      name: 'Prize 12',
+      available: false
+    },
+  ]
   // Call an external API endpoint to get posts
   const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
   const profile = await res.json()
@@ -50,11 +63,12 @@ export async function getStaticProps() {
     props: {
       profile,
       activity,
+      prizes
     },
   }
 }
 
-export default function Redeem({ profile, activity }) {
+export default function Redeem({ profile, activity, prizes }) {
   function spinWheel() {
     alert('Spinning the wheel!')
   }
@@ -78,16 +92,9 @@ export default function Redeem({ profile, activity }) {
         <div>
           <div className="mt-5 space-y-5">
             <StampsCounter count="10" />
-            <SpinningWheel></SpinningWheel>
-            {/* <Button
-              href="/participant/scan-tickets"
-              className="w-full items-center"
-              type="button"
-            >
-              <span>Scan for tickets!</span>
-              <CameraIcon className="ml-3 h-6 w-6" />
-            </Button> */}
-            <Timeline title="REDEMPTION HISTORY" timeline={activity} />
+            <Prize></Prize>
+            <Prizes title="PRIZES" list={prizes}></Prizes>
+            <Timeline title="REDEMPTION HISTORY" list={activity} />
             <p className="text-center font-mono text-xs text-blue-400">
               {profile.uid}
             </p>

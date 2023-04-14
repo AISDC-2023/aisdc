@@ -1,4 +1,5 @@
 import { Heading } from '@/components/Heading'
+import { Paragraph } from '@/components/Paragraph'
 import {
   CheckIcon,
   ArrowPathRoundedSquareIcon,
@@ -6,7 +7,7 @@ import {
   GiftIcon,
 } from '@heroicons/react/20/solid'
 
-export function Timeline({ title, timeline }) {
+export function Timeline({ title, list }) {
   const eventTypes = {
     applied: { icon: CloudIcon, bgColorClass: 'bg-gray-400' },
     redeemed: { icon: ArrowPathRoundedSquareIcon, bgColorClass: 'bg-blue-500' },
@@ -45,10 +46,10 @@ export function Timeline({ title, timeline }) {
         {/* Activity Feed */}
         <div className="mt-6 flow-root">
           <ul role="list" className="-mb-8">
-            {timeline.map((item, itemIdx) => (
+            {list.map((item, itemIdx) => (
               <li key={item.id}>
                 <div className="relative pb-8">
-                  {itemIdx !== timeline.length - 1 ? (
+                  {itemIdx !== list.length - 1 ? (
                     <span
                       className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
                       aria-hidden="true"
@@ -58,12 +59,12 @@ export function Timeline({ title, timeline }) {
                     <EventTypeIcon type={item.type}></EventTypeIcon>
                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                       <div>
-                        <p className="text-sm text-gray-500">
+                        <Paragraph>
                           {item.content}{' '}
                           <a href="#" className="font-medium text-gray-900">
                             {item.target}
                           </a>
-                        </p>
+                        </Paragraph>
                       </div>
                       <div className="whitespace-nowrap text-right text-sm text-gray-500">
                         <time dateTime={item.datetime}>{item.date}</time>
