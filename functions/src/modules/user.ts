@@ -49,7 +49,6 @@ export const getInfo = functions
     };
   });
 
-
 /**
  * Get list of users from firebase authentication to be shown on admin portal
  *
@@ -71,8 +70,7 @@ export const list = functions
       );
     }
     // Ensure function caller is an admin
-    const userRef = await db.users.doc(context.auth.uid).get();
-    if (!userRef.exists || userRef.data()?.type != "admin") {
+    if (!(context.auth.token?.type != "admin")) {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user"
@@ -100,7 +98,6 @@ export const list = functions
     }
   });
 
-
 /**
  * Create a new user with new unique conference id.
  *
@@ -127,19 +124,15 @@ export const create = functions
       );
     }
     // Ensure function caller is an admin
-    const userRef = await db.users.doc(context.auth.uid).get();
-    if (!userRef.exists || userRef.data()?.type != "admin") {
+    if (!(context.auth.token?.type != "admin")) {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user"
       );
     }
     // Ensure data is well-formatted
-    if (
-      !data.name ||
-      !data.email ||
-      !["particpant", "partner", "admin"].includes(data.type)
-    ) {
+    const {name, email, type} = data;
+    if (!name || !email || !["particpant", "partner", "admin"].includes(type)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
@@ -149,17 +142,16 @@ export const create = functions
     // Create user in firebase auth and update firestore document
     try {
       const cid = getCid();
+      // Create new user in firebase auth
       await auth.createUser({
         uid: cid,
-        email: data.email,
-        displayName: data.name,
+        email: email,
+        displayName: name,
         emailVerified: true,
         disabled: false,
       });
-      await db.users.doc(cid).set({
-        name: data.name,
-        type: data.type,
-      });
+      // Set user type into firebase auth claim
+      await auth.setCustomUserClaims(cid, {type});
       return cid;
     } catch (err: any) {
       let detail;
@@ -175,7 +167,6 @@ export const create = functions
       throw new functions.https.HttpsError("invalid-argument", detail.message);
     }
   });
-
 
 /**
  * Delete a user from the database.
@@ -198,15 +189,15 @@ export const deleteUser = functions
       );
     }
     // Ensure function caller is an admin
-    const userRef = await db.users.doc(context.auth.uid).get();
-    if (!userRef.exists || userRef.data()?.type != "admin") {
+    if (!(context.auth.token?.type != "admin")) {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user"
       );
     }
     // Ensure data is well-formatted
-    if (!data.cid) {
+    const {cid} = data;
+    if (!cid) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
@@ -215,8 +206,8 @@ export const deleteUser = functions
 
     // Delete user from firebase auth and delete firestore document
     try {
-      await auth.deleteUser(data.cid);
-      await db.users.doc(data.cid).delete();
+      await auth.deleteUser(cid);
+      await db.users.doc(cid).delete();
     } catch (err: any) {
       functions.logger.error(err);
       if (err.code == "auth/user-not-found") {
