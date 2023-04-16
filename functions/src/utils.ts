@@ -1,6 +1,6 @@
 import ShortUniqueId from "short-unique-id";
 
-const uidGenerator = new ShortUniqueId({length: 8});
+const uidGenerator = new ShortUniqueId();
 
 /**
  * Return unique conference id based on current timestamp
@@ -8,5 +8,5 @@ const uidGenerator = new ShortUniqueId({length: 8});
  * @return {string} Time unique conference id
  */
 export function getCid(): string {
-  return uidGenerator.stamp(8);
+  return uidGenerator.stamp(10);
 }
