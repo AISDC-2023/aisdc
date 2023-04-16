@@ -152,6 +152,11 @@ export const create = functions
       });
       // Set user type into firebase auth claim
       await auth.setCustomUserClaims(cid, {type});
+      // Create new firestore document
+      await db.users.doc(cid).set({
+        name: name,
+        type: type,
+      });
       return cid;
     } catch (err: any) {
       let detail;
