@@ -9,6 +9,8 @@ import {getCid} from "../utils";
  * This function is only callable when a user is authenticated and called using
  * Cloud Function SDK.
  *
+ * @param {Object} data - Empty object
+ *
  * @returns The user information.
  */
 export const getInfo = functions
