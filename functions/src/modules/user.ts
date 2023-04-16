@@ -123,3 +123,57 @@ export const create = functions
       throw new functions.https.HttpsError("invalid-argument", detail.message);
     }
   });
+
+
+/**
+ * Delete a user from the database.
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated, is type admin,
+ * and called using Cloud Function SDk.
+ *
+ * @param {Object} data - Consist of user's cid, email and type.
+ * @param {string} data.cid - Conference id of user
+ */
+export const deleteUser = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    // Ensure function caller is an admin
+    const userRef = await db.users.doc(context.auth.uid).get();
+    if (!userRef.exists || userRef.data()?.type != "admin") {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not enough permissions to create user"
+      );
+    }
+    // Ensure data is well-formatted
+    if (!data.cid) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Invalid arguments"
+      );
+    }
+
+    // Delete user from firebase auth and delete firestore document
+    try {
+      await auth.deleteUser(data.cid);
+      await db.users.doc(data.cid).delete();
+    } catch (err: any) {
+      functions.logger.error(err);
+      if (err.code == "auth/user-not-found") {
+        throw new functions.https.HttpsError("not-found", "User not found");
+      }
+
+      throw new functions.https.HttpsError(
+        "unknown",
+        "User is not added due to unknown error"
+      );
+    }
+  });
