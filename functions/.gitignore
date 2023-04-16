@@ -1,1 +1,12 @@
+# Firebase admin service account private key
+aisdc-2023-firebase-adminsdk.json
+
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
 node_modules/
