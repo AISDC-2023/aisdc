@@ -10,4 +10,4 @@ export const helloWorld = functions
     response.send("Hello from Firebase!");
   });
 
-export * as data from "./modules/data";
+export * as user from "./modules/user";
