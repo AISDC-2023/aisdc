@@ -49,6 +49,58 @@ export const getInfo = functions
     };
   });
 
+
+/**
+ * Get list of users from firebase authentication to be shown on admin portal
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated, is type admin,
+ * and called using Cloud Function SDk.
+ * @param {Object} data - Empty object
+ *
+ * @returns The user information.
+ */
+export const list = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    // Ensure function caller is an admin
+    const userRef = await db.users.doc(context.auth.uid).get();
+    if (!userRef.exists || userRef.data()?.type != "admin") {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not enough permissions to create user"
+      );
+    }
+
+    try {
+      const userList = await auth.listUsers(1000);
+      return {
+        users: userList.users.map((userRecord) => {
+          return {
+            cid: userRecord.uid,
+            name: userRecord.displayName,
+            email: userRecord.email,
+            type: userRecord.customClaims?.type,
+          };
+        }),
+      };
+    } catch (err) {
+      // Throw exception if unknown error
+      throw new functions.https.HttpsError(
+        "unknown",
+        "Unknown error occurred while listing users."
+      );
+    }
+  });
+
+
 /**
  * Create a new user with new unique conference id.
  *
