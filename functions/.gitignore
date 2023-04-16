@@ -1,3 +1,6 @@
+# Firebase admin service account private key
+aisdc-2023-firebase-adminsdk.json
+
 # Compiled JavaScript files
 lib/**/*.js
 lib/**/*.js.map
