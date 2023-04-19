@@ -47,12 +47,12 @@ export async function getStaticProps() {
     {
       id: 4,
       name: 'Prize 1',
-      available: true
+      available: true,
     },
     {
       id: 40,
       name: 'Prize 12',
-      available: false
+      available: false,
     },
   ]
   // Call an external API endpoint to get posts
@@ -63,7 +63,7 @@ export async function getStaticProps() {
     props: {
       profile,
       activity,
-      prizes
+      prizes,
     },
   }
 }
