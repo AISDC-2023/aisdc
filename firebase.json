@@ -20,12 +20,13 @@
     }
   ],
   "hosting": {
-    "public": "web-app",
+    "public": "web-app/out",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
+    "cleanUrls": true,
     "rewrites": [
       {
         "source": "**",
