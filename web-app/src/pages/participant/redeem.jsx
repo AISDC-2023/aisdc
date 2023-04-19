@@ -1,38 +1,14 @@
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
-import { Button } from '@/components/Button'
-import { CameraIcon, GiftIcon } from '@heroicons/react/24/solid'
 import Image from 'next/image'
-import globeGif from '@/images/globe-spinning.gif'
+import hologramGif from '@/images/hologram.gif'
 import { StampsCounter } from '@/components/participant/StampsCounter'
+import { Prize } from '@/components/participant/Prize'
+import { Prizes } from '@/components/participant/Prizes'
 import { Timeline } from '@/components/participant/Timeline'
 
 export async function getStaticProps() {
   const activity = [
-    {
-      id: 1,
-      type: 'applied',
-      content: 'Applied to',
-      target: 'Front End Developer',
-      date: 'Sep 20',
-      datetime: '2020-09-20',
-    },
-    {
-      id: 2,
-      type: 'redeemed',
-      content: 'redeemed to phone screening by',
-      target: 'Bethany Blake',
-      date: 'Sep 22',
-      datetime: '2020-09-22',
-    },
-    {
-      id: 3,
-      type: 'completed',
-      content: 'Completed phone screening with',
-      target: 'Martha Gardner',
-      date: 'Sep 28',
-      datetime: '2020-09-28',
-    },
     {
       id: 4,
       type: 'redeemed',
@@ -65,24 +41,20 @@ export async function getStaticProps() {
       date: 'Sep 30',
       datetime: '2020-09-30',
     },
-    {
-      id: 5764,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 5,
-      type: 'completed',
-      content: 'Completed interview with',
-      target: 'Katherine Snyder',
-      date: 'Oct 4',
-      datetime: '2020-10-04',
-    },
   ]
 
+  const prizes = [
+    {
+      id: 4,
+      name: 'Prize 1',
+      available: true,
+    },
+    {
+      id: 40,
+      name: 'Prize 12',
+      available: false,
+    },
+  ]
   // Call an external API endpoint to get posts
   const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
   const profile = await res.json()
@@ -91,18 +63,23 @@ export async function getStaticProps() {
     props: {
       profile,
       activity,
+      prizes,
     },
   }
 }
 
-export default function Participant({ profile, activity }) {
+export default function Redeem({ profile, activity, prizes }) {
+  function spinWheel() {
+    alert('Spinning the wheel!')
+  }
+
   return (
     <>
       <ContainerMobile>
         <div className="flex justify-center">
           <Image
-            className="w-16"
-            src={globeGif}
+            className="w-32"
+            src={hologramGif}
             alt=""
             priority
             optimized="true"
@@ -110,28 +87,14 @@ export default function Participant({ profile, activity }) {
         </div>
 
         <Heading headerType="h2" className="text-center">
-          LET THE GAMES BEGIN!
+          AYE AYE CAPTAIN!
         </Heading>
         <div>
           <div className="mt-5 space-y-5">
-            <Button
-              href="/participant/scan-tickets"
-              className="w-full items-center"
-              type="button"
-            >
-              <span>Scan for tickets!</span>
-              <CameraIcon className="ml-3 h-6 w-6" />
-            </Button>
-            <Button
-              href="/participant/redeem"
-              className="w-full items-center"
-              type="button"
-            >
-              <span>Redeem</span>
-              <GiftIcon className="ml-3 h-6 w-6" />
-            </Button>
             <StampsCounter count="10" />
-            <Timeline title="YOUR ACTIVITY" list={activity} />
+            <Prize></Prize>
+            <Prizes title="PRIZES" list={prizes}></Prizes>
+            <Timeline title="REDEMPTION HISTORY" list={activity} />
             <p className="text-center font-mono text-xs text-blue-400">
               {profile.uid}
             </p>
