@@ -131,7 +131,7 @@ export default function Participant({ profile, activity }) {
               <GiftIcon className="ml-3 h-6 w-6" />
             </Button>
             <StampsCounter count="10" />
-            <Timeline title="YOUR ACTIVITY" timeline={activity} />
+            <Timeline title="YOUR ACTIVITY" list={activity} />
             <p className="text-center font-mono text-xs text-blue-400">
               {profile.uid}
             </p>
