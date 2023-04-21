@@ -50,7 +50,6 @@ export const create = functions
     }
   });
 
-
 /**
  * Get a list of all the prize in the collection
  *
@@ -137,10 +136,10 @@ export const deletePrize = functions
     // Delete prizes from collection
     try {
       await Promise.all(
-        ids.map(async (id: string) => {
+        ids.map((id: string) => {
           return db.prizes.doc(id).delete();
         })
-      )
+      );
     } catch (err) {
       throw new functions.https.HttpsError(
         "unknown",
@@ -148,4 +147,3 @@ export const deletePrize = functions
       );
     }
   });
-
