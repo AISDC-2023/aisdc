@@ -22,13 +22,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: "14"
       - run: npm install
       - name: Create SA key
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
       - name: Deploy Cloud Functions
-        uses: chrissank/deploy-firebase-functions@1.0.0
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
         env:
-          FIREBASE_TOKEN: ${{secrets.FIREBASE_SERVICE_ACCOUNT}}
-          TARGET: default
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         # run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npm run deploy
