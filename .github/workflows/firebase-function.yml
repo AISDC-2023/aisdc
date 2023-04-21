@@ -27,7 +27,7 @@ jobs:
       - name: Create SA key
         run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > $HOME/gcloud.json
       - name: Deploy Cloud Functions
-        uses: chrissank/deploy-firebase-functions@1.1.0
+        uses: chrissank/deploy-firebase-functions@1.0.0
         env:
           FIREBASE_TOKEN: ${{secrets.FIREBASE_SERVICE_ACCOUNT}}
           TARGET: default
