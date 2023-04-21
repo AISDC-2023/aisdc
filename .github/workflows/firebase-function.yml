@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - fix/firebase-hosting-cicd
     paths:
       - "functions/**"
       - ".firebaserc"
