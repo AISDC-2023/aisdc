@@ -45,6 +45,7 @@ export const create = functions
     try {
       await db.prizes.add({name, quantity, isRare});
     } catch (err) {
+      functions.logger.error(err);
       throw new functions.https.HttpsError(
         "unknown",
         "Prize is not added due to firestore error"
@@ -91,6 +92,7 @@ export const get = functions
         prizes,
       };
     } catch (err) {
+      functions.logger.error(err);
       // Throw exception if unknown error
       throw new functions.https.HttpsError(
         "unknown",
@@ -143,6 +145,7 @@ export const deletePrize = functions
         })
       );
     } catch (err) {
+      functions.logger.error(err);
       throw new functions.https.HttpsError(
         "unknown",
         "Prize is not deleted due to firestore error"
@@ -226,6 +229,10 @@ export const redeem = functions
         timestamp: FieldValue.serverTimestamp(),
       });
     } catch (err) {
+      functions.logger.error(err);
+      if (err instanceof functions.https.HttpsError) {
+        throw err;
+      }
       throw new functions.https.HttpsError(
         "unknown",
         "Prize is not redeemed due to firestore error"
@@ -332,6 +339,10 @@ export const draw = functions
       });
       return prizePool[pid];
     } catch (err) {
+      functions.logger.error(err);
+      if (err instanceof functions.https.HttpsError) {
+        throw err;
+      }
       throw new functions.https.HttpsError(
         "unknown",
         "Prize is not drawn due to firestore error"
