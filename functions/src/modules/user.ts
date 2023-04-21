@@ -111,7 +111,7 @@ export const list = functions
  * @param {string} data.type - Type of the user, one of 'participant','admin'
  * ,'partner
  *
- * @returns {strin} cid - New conference id of user.
+ * @returns {string} cid - New conference id of user.
  */
 export const create = functions
   .region("asia-southeast1")

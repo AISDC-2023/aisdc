@@ -1,6 +1,20 @@
 import * as functions from "firebase-functions";
 import {db} from "../firebase";
 
+/**
+ * Create new prize document on Prizes collection
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated, is type admin,
+ * and called using Cloud Function SDk.
+ *
+ * @param {Object} data - Consist of prize's name, quantity and isRare
+ * @param {string} data.name - Name of the prize
+ * @param {number} data.quantity - Initial Quantity of the prize
+ * @param {boolean} data.isRare - Is the prize considered rare?
+ */
+
+
 export const create = functions
   .region("asia-northeast1")
   .https.onCall(async (data, context) => {
