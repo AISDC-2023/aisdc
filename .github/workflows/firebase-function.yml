@@ -8,7 +8,7 @@ on:
       - "functions/**"
       - ".firebaserc"
       - "firebase.json"
-      - ".github/workflows/firebase-hosting.yml"
+      - ".github/workflows/firebase-function.yml"
 jobs:
   staging-web:
     runs-on: ubuntu-latest
