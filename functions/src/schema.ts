@@ -3,6 +3,7 @@ import {Timestamp} from "firebase-admin/firestore";
 export interface UserSchema {
   name: string;
   type: "admin" | "partner" | "participant";
+  stampCount: number
 }
 
 export interface UserPrizeSchema {
@@ -19,7 +20,6 @@ export interface UserTransactionSchema {
 export interface UserStampSchema {
   name: string;
   received: Timestamp;
-  redeemed: boolean;
 }
 
 export interface PrizeSchema {
