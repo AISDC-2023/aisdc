@@ -291,6 +291,14 @@ export const draw = functions
     };
     // Draw prize from collection
     try {
+      const userSnap = await db.users.doc(cid).get();
+      const user = userSnap.data();
+      if (!user || user.stampCount < 5) {
+        throw new functions.https.HttpsError(
+          "failed-precondition",
+          "User does not have enough stamp to draw prize"
+        );
+      }
       const prizeSnaps = await db.prizes.where("quantity", ">=", 0).get();
       const prizePool: {[key: string]: PrizeSchema} = {};
       prizeSnaps.forEach((doc) => {
@@ -309,12 +317,18 @@ export const draw = functions
         name: prizePool[pid].name,
         timestamp: FieldValue.serverTimestamp(),
       });
+      // Deduct prize quantity by 1
+      await db.prizes.doc(pid).update({
+        quantity: FieldValue.increment(-1),
+      });
+      // Deduct stamp count by 5
+      await db.users.doc(cid).update({
+        stampCount: FieldValue.increment(-5),
+      });
+      // Add transaction to user history
       await db.userTransactions(cid).add({
         description: `Received ${prizePool[pid].name}`,
         timestamp: FieldValue.serverTimestamp(),
-      });
-      await db.prizes.doc(pid).update({
-        quantity: FieldValue.increment(-1),
       });
       return prizePool[pid];
     } catch (err) {
