@@ -13,8 +13,6 @@ import {db} from "../firebase";
  * @param {number} data.quantity - Initial Quantity of the prize
  * @param {boolean} data.isRare - Is the prize considered rare?
  */
-
-
 export const create = functions
   .region("asia-northeast1")
   .https.onCall(async (data, context) => {
