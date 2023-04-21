@@ -195,26 +195,30 @@ export const redeem = functions
     // Redeem prize from collection
     try {
       const prizeSnap = await db.prizes.doc(pid).get();
-      const userPrizeSnap = await db.userPrizes(cid).doc(pid).get();
-      const prize = prizeSnap.data();
-      const userPrize = userPrizeSnap.data();
+      const userPrizeSnap = await db
+        .userPrizes(cid)
+        .where("pid", "==", pid)
+        .where("redeemed", "==", false)
+        .get();
       // Checking pre-conditions
+      const prize = prizeSnap.data();
       if (!prize) {
         throw new functions.https.HttpsError("not-found", "Prize is not found");
       }
-      if (!userPrize) {
-        throw new functions.https.HttpsError(
-          "not-found",
-          "Prize is not found under user's prize collection"
-        );
-      }
-      const prizeQuantity = prize.quantity;
-      if (prizeQuantity <= 0) {
+      if (prize.quantity <= 0) {
         throw new functions.https.HttpsError(
           "failed-precondition",
           "Prize is out of stock"
         );
       }
+      if (userPrizeSnap.empty) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          "Prize is not redeemable under user's prize collection"
+        );
+      }
+      const userPid = userPrizeSnap.docs[0].id;
+      const userPrize = userPrizeSnap.docs[0].data();
       if (userPrize.redeemed) {
         throw new functions.https.HttpsError(
           "failed-precondition",
@@ -223,7 +227,7 @@ export const redeem = functions
       }
 
       // Executing prize redeem transaction
-      await db.userPrizes(cid).doc(pid).update({redeemed: true});
+      await db.userPrizes(cid).doc(userPid).update({redeemed: true});
       await db.userTransactions(cid).add({
         description: `Redeemed prize ${prize.name}`,
         timestamp: FieldValue.serverTimestamp(),
@@ -319,7 +323,8 @@ export const draw = functions
       }
       const pid = drawPrize(prizePool);
       // Assign prize to user
-      await db.userPrizes(cid).doc(pid).set({
+      await db.userPrizes(cid).add({
+        pid: pid,
         redeemed: false,
         name: prizePool[pid].name,
         timestamp: FieldValue.serverTimestamp(),
