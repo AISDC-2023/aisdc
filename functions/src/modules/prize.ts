@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import {db} from "../firebase";
+import {PrizeSchema} from "../schema";
 
 /**
  * Create new prize document on Prizes collection
@@ -219,20 +220,107 @@ export const redeem = functions
       }
 
       // Executing prize redeem transaction
-      await db.prizes.doc(pid).update({
-        quantity: prizeQuantity - 1,
-      });
       await db.userPrizes(cid).doc(pid).update({redeemed: true});
-      await db
-        .userTransactions(cid)
-        .add({
-          description: `Redeemed ${prize.name}`,
-          timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        });
+      await db.userTransactions(cid).add({
+        description: `Redeemed ${prize.name}`,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
     } catch (err) {
       throw new functions.https.HttpsError(
         "unknown",
         "Prize is not redeemed due to firestore error"
+      );
+    }
+  });
+
+/**
+ * Draw a prize from current pool of prizes available.
+ * If successful, the prize will be added to the user's prize collection.
+ * The chances of getting rare prize should be lower than normal prize.
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated,
+ * and called using Cloud Function SDk.
+ *
+ * @params {Object} data - Empty object
+ * @returns The object containing the prize that is drawn.
+ */
+export const draw = functions
+  .region("asia-northeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    const cid = context.auth.uid;
+    const drawPrize = (prizePool: {[key: string]: PrizeSchema}) => {
+      // Draw prizes with 95% chance of getting normal prize and
+      // 5% chance of getting rare prize. While stock last
+      const normalPrizePool = Object.fromEntries(
+        Object.entries(prizePool).filter(
+          ([key]) => !prizePool[key].isRare && prizePool[key].quantity >= 0
+        )
+      );
+      const rarePrizePool = Object.fromEntries(
+        Object.entries(prizePool).filter(
+          ([key]) => prizePool[key].isRare && prizePool[key].quantity >= 0
+        )
+      );
+      const random = Math.random();
+      const randomDraw = (prizePool: {[key: string]: PrizeSchema}) => {
+        const weights = Object.values(prizePool).map((prize) => prize.quantity);
+        const weightedRand = (weights: number[]) => {
+          const sum = weights.reduce((a, b) => a + b, 0);
+          let acc = 0;
+          weights = weights.map((weight) => (acc = acc + weight));
+          const random = Math.random() * sum;
+          const index = weights.findIndex((weight) => weight > random);
+          return index;
+        };
+        const index = weightedRand(weights);
+        return Object.keys(prizePool)[index];
+      };
+      if (random >= 0.95 && Object.keys(rarePrizePool).length > 0) {
+        return randomDraw(rarePrizePool);
+      } else {
+        return randomDraw(normalPrizePool);
+      }
+    };
+    // Draw prize from collection
+    try {
+      const prizeSnaps = await db.prizes.where("quantity", ">=", 0).get();
+      const prizePool: {[key: string]: PrizeSchema} = {};
+      prizeSnaps.forEach((doc) => {
+        prizePool[doc.id] = doc.data();
+      });
+      if (Object.keys(prizePool).length === 0) {
+        throw new functions.https.HttpsError(
+          "failed-precondition",
+          "Prize pool is empty. All prize are redeemed."
+        );
+      }
+      const pid = drawPrize(prizePool);
+      // Assign prize to user
+      await db.userPrizes(cid).doc(pid).set({
+        redeemed: false,
+        name: prizePool[pid].name,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await db.userTransactions(cid).add({
+        description: `Received ${prizePool[pid].name}`,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      });
+      await db.prizes.doc(pid).update({
+        quantity: admin.firestore.FieldValue.increment(-1),
+      });
+      return prizePool[pid];
+    } catch (err) {
+      throw new functions.https.HttpsError(
+        "unknown",
+        "Prize is not drawn due to firestore error"
       );
     }
   });
