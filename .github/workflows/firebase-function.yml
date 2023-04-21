@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - fix/firebase-hosting-cicd
     paths:
       - "functions/**"
       - ".firebaserc"
@@ -32,4 +31,3 @@ jobs:
           args: deploy --only functions
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AISDC_2023 }}
-        # run: export GOOGLE_APPLICATION_CREDENTIALS=$HOME/gcloud.json && npm run deploy
