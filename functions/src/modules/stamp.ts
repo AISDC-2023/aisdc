@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import {FieldValue} from "firebase-admin/firestore";
 import {db} from "../firebase";
 import {StampTypeCount} from "../schema";
 
@@ -95,20 +95,21 @@ export const redeem = functions
       // Assign stamp to user collection
       await db.userStamps(cid).doc(sid).set({
         name: stamp.name,
-        received: admin.firestore.FieldValue.serverTimestamp(),
+        received: FieldValue.serverTimestamp(),
       });
       // Update user's stamp count based on StampTypeCount
       await db.users.doc(cid).update({
-        stampCount: admin.firestore.FieldValue.increment(
+        stampCount: FieldValue.increment(
           StampTypeCount[stamp.type]
         ),
       });
       // Update user transaction history
       await db.userTransactions(cid).add({
         description: `Redeemed stamp ${stamp.name}`,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: FieldValue.serverTimestamp(),
       });
     } catch (err) {
+      functions.logger.error(err);
       if (err instanceof functions.https.HttpsError) {
         throw err;
       }
