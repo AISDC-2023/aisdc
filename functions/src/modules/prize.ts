@@ -34,7 +34,7 @@ export const create = functions
     }
     // Ensure data is well-formatted
     const {quantity, name, isRare} = data;
-    if (!quantity || !name || !isRare) {
+    if (quantity == undefined || name == undefined || isRare == undefined) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
@@ -225,7 +225,7 @@ export const redeem = functions
       // Executing prize redeem transaction
       await db.userPrizes(cid).doc(pid).update({redeemed: true});
       await db.userTransactions(cid).add({
-        description: `Redeemed ${prize.name}`,
+        description: `Redeemed prize ${prize.name}`,
         timestamp: FieldValue.serverTimestamp(),
       });
     } catch (err) {
@@ -334,10 +334,10 @@ export const draw = functions
       });
       // Add transaction to user history
       await db.userTransactions(cid).add({
-        description: `Received ${prizePool[pid].name}`,
+        description: `Received prize ${prizePool[pid].name}`,
         timestamp: FieldValue.serverTimestamp(),
       });
-      return prizePool[pid];
+      return {pid: prizePool[pid]};
     } catch (err) {
       functions.logger.error(err);
       if (err instanceof functions.https.HttpsError) {
