@@ -50,3 +50,50 @@ export const create = functions
     }
   });
 
+
+/**
+ * Get a list of all the prize in the collection
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated, is type admin,
+ * and called using Cloud Function SDk.
+ *
+ * @param {Object} data - Empty object
+ *
+ * @returns The object containing object for each prize.
+ */
+export const get = functions
+  .region("asia-northeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    // Ensure function caller is an admin
+    if (!(context.auth.token?.type != "admin")) {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not enough permissions to create user"
+      );
+    }
+
+    try {
+      const prizes: {[key: string]: any} = {};
+      const prizeSnaps = await db.prizes.get();
+      prizeSnaps.forEach((doc) => {
+        prizes[doc.id] = doc.data();
+      });
+      return {
+        prizes,
+      };
+    } catch (err) {
+      // Throw exception if unknown error
+      throw new functions.https.HttpsError(
+        "unknown",
+        "Unknown error occurred while listing prizes."
+      );
+    }
+  });
