@@ -82,7 +82,7 @@ export const get = functions
     }
 
     try {
-      const prizes: {[key: string]: any} = {};
+      const prizes: {[key: string]: PrizeSchema} = {};
       const prizeSnaps = await db.prizes.get();
       prizeSnaps.forEach((doc) => {
         prizes[doc.id] = doc.data();
