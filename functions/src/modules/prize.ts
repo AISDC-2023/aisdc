@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import * as admin from "firebase-admin";
+import {FieldValue} from "firebase-admin/firestore";
 import {db} from "../firebase";
 import {PrizeSchema} from "../schema";
 
@@ -223,7 +223,7 @@ export const redeem = functions
       await db.userPrizes(cid).doc(pid).update({redeemed: true});
       await db.userTransactions(cid).add({
         description: `Redeemed ${prize.name}`,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: FieldValue.serverTimestamp(),
       });
     } catch (err) {
       throw new functions.https.HttpsError(
@@ -307,14 +307,14 @@ export const draw = functions
       await db.userPrizes(cid).doc(pid).set({
         redeemed: false,
         name: prizePool[pid].name,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: FieldValue.serverTimestamp(),
       });
       await db.userTransactions(cid).add({
         description: `Received ${prizePool[pid].name}`,
-        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        timestamp: FieldValue.serverTimestamp(),
       });
       await db.prizes.doc(pid).update({
-        quantity: admin.firestore.FieldValue.increment(-1),
+        quantity: FieldValue.increment(-1),
       });
       return prizePool[pid];
     } catch (err) {
