@@ -11,4 +11,5 @@ export const helloWorld = functions
   });
 
 export * as user from "./modules/user";
+export * as prize from "./modules/prize";
 export * as stamp from "./modules/stamp";

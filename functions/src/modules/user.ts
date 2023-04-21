@@ -10,6 +10,8 @@ import {getCid} from "../utils";
  * Cloud Function SDK.
  *
  * @param {Object} data - Empty object
+ * @param {string?} data.cid - User's conference id. If not provided, the
+ * function will return the information of the user calling the function.
  *
  * @returns The user information.
  */
@@ -22,7 +24,16 @@ export const getInfo = functions
         "The function must be called while authenticated."
       );
     }
-    const cid = context.auth.uid;
+    let cid: string;
+    if (!(context.auth.token?.type != "admin")) {
+      // If user is not admin, get cid from token
+      // (i.e. user retrieve its own data)
+      cid = context.auth.uid;
+    } else {
+      // If user is admin, get cid from data if available
+      // Else, get admin's own cid
+      cid = data.cid ?? context.auth.uid;
+    }
     const userRef = await db.users.doc(cid).get();
     if (!userRef.exists) {
       throw new functions.https.HttpsError("not-found", "User not found.");
@@ -111,7 +122,7 @@ export const list = functions
  * @param {string} data.type - Type of the user, one of 'participant','admin'
  * ,'partner
  *
- * @returns {strin} cid - New conference id of user.
+ * @returns {string} cid - New conference id of user.
  */
 export const create = functions
   .region("asia-southeast1")

@@ -7,6 +7,7 @@ export interface UserSchema {
 }
 
 export interface UserPrizeSchema {
+  pid: string;
   name: string;
   redeemed: boolean;
   timestamp: Timestamp;
