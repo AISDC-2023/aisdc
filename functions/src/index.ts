@@ -11,3 +11,4 @@ export const helloWorld = functions
   });
 
 export * as user from "./modules/user";
+export * as stamp from "./modules/stamp";

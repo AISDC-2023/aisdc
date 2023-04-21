@@ -156,6 +156,7 @@ export const create = functions
       await db.users.doc(cid).set({
         name: name,
         type: type,
+        stampCount: 0,
       });
       return cid;
     } catch (err: any) {
