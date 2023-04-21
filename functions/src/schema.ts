@@ -33,3 +33,9 @@ export interface StampSchema {
   description: string;
   type: "booth" | "workshop" | "event" ;
 }
+
+export enum StampTypeCount {
+  booth = 1,
+  event = 2,
+  workshop = 5,
+}
