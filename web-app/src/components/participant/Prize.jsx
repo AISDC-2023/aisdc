@@ -25,7 +25,7 @@ export function Prize() {
       <div className="flex justify-center">
         <Image
           src={Cookie}
-          className={`justify-self-center z-10 w-48 transition-all duration-[3000ms] ${
+          className={`z-10 w-48 justify-self-center transition-all duration-[3000ms] ${
             isClicked ? '-translate-x-64' : ''
           }`}
           alt=""
@@ -33,20 +33,19 @@ export function Prize() {
           optimized="true"
           onClick={handleClick}
         />
-          <div className="relative self-center justify-end">
-        <div
-          className={`absolute -ml-16 inset-0 h-14 transform rounded-md bg-blue-500 text-white transition-all duration-[3000ms] ${
-            isClicked ? '-translate-x-64 w-96' : 'w-0.5'
-          }`}
-        >
-          <div className="whitespace-nowrap text-right pr-10 h-full w-full">
-            <p className="py-3.5">{prizeName}</p>
-          </div>
+        <div className="relative justify-end self-center">
+          <div
+            className={`absolute inset-0 -ml-16 h-14 transform rounded-md bg-blue-500 text-white transition-all duration-[3000ms] ${
+              isClicked ? 'w-96 -translate-x-64' : 'w-0.5'
+            }`}
+          >
+            <div className="h-full w-full whitespace-nowrap pr-10 text-right">
+              <p className="py-3.5">{prizeName}</p>
+            </div>
           </div>
         </div>
       </div>
 
-      
       <p
         className={`text-center text-sm text-blue-600 ${
           isClicked ? 'hidden' : ''

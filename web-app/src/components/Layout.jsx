@@ -20,14 +20,14 @@ export default function Layout({ children }) {
         src={orangeVector}
         alt=""
         priority
-        optimized="true"
+        optimized="false"
       />
       <Image
         className="fixed -left-16 bottom-20 z-[-1] w-44 rotate-[34deg]"
         src={blueVector}
         alt=""
         priority
-        optimized="true"
+        optimized="false"
       />
       <main>{children}</main>
     </>
