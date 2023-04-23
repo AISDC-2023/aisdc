@@ -84,7 +84,7 @@ export const list = functions
     if (!(context.auth.token?.type != "admin")) {
       throw new functions.https.HttpsError(
         "permission-denied",
-        "Not enough permissions to create user"
+        "Not enough permissions to list users"
       );
     }
 
@@ -209,7 +209,7 @@ export const deleteUser = functions
     if (!(context.auth.token?.type != "admin")) {
       throw new functions.https.HttpsError(
         "permission-denied",
-        "Not enough permissions to create user"
+        "Not enough permissions to delete user"
       );
     }
     // Ensure data is well-formatted
