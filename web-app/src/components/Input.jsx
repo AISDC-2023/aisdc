@@ -27,6 +27,7 @@ export function Input({ className, ...props }) {
           required={props.required}
           onChange={handleChange}
           className={className}
+          disabled={props.disabled}
         />
       </div>
     </div>
