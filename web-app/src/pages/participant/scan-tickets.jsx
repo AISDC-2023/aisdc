@@ -4,6 +4,7 @@ import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
 import { Paragraph } from '@/components/Paragraph'
 import { QrReader } from 'react-qr-reader'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 
 export default function Scan() {
   const [data, setData] = useState('No result')
@@ -50,20 +51,7 @@ export default function Scan() {
           SCAN FOR TICKETS
         </Heading>
         <p className="mt-2 inline-flex text-blue-600">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="mr-3 h-6 w-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-            />
-          </svg>
+          <InformationCircleIcon className="mr-3 h-6 w-6"></InformationCircleIcon>
           <span>Do enable camera permissions</span>
         </p>
         <QRScanner></QRScanner>
