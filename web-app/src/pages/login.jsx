@@ -14,14 +14,12 @@ const QRScanner = (props) => {
   return (
     <>
       <QrReader
-        constraints={{facingMode: 'environment'}}
+        constraints={{ facingMode: 'environment' }}
         onResult={async (result, error) => {
           if (!!result) {
-            // send to server and redirect
             const func = httpsCallable(functions, 'user-verify')
             func({ cid: result?.text })
               .then((result) => {
-
                 let path = ''
                 switch (profile.id) {
                   case 'admin':
@@ -34,10 +32,13 @@ const QRScanner = (props) => {
                     path = '/participant?cid=' + cid
                     break
                   default:
-                    router.push('/register?uid=' + uid)
+                    router.push('/register?cid=' + cid)
                 }
 
-                sendEmail(path, data.email)
+                // this code will run if switch default not triggered
+                sendEmail(path, result.email)
+                router.push('/email-sent')
+                // end
               })
               .catch((error) => {
                 console.log(error)

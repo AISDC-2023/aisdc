@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
+import { sendEmail } from '@/helpers'
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
@@ -27,30 +28,26 @@ export default function Register() {
 
   async function handleSubmit(event) {
     event.preventDefault()
-    // detect whether the result is a valid CID
-    // assume always true for now
-    const isValidCid = true
 
-    if (isValidCid) {
-      // send to server and redirect
-      const func = httpsCallable(functions, 'user-create')
-      func({ name: name, email: email, type: 'participant' })
-        .then((result) => {
-          // Read result of the Cloud Function.
-          /** @type {any} */
-          const data = result.data
-          // const sanitizedMessage = data.text;
-          console.log(result)
+    const func = httpsCallable(functions, 'user-create')
+    func({ name: name, email: email, cid: cid, type: 'participant' })
+      .then((result) => {
+        const data = result.data
+        const sanitizedMessage = data.text
+
+        // if success redirect to email link else show error
+        if (true) {
           setAuthRes('s')
-        })
-        .catch((error) => {
-          // Getting the Error details.
-          console.log(error)
+          const path = '/participant?cid=1234'
+          sendEmail(path, email)
+        } else {
+          // already exists or invalid
           setAuthRes('f')
-        })
-    } else {
-      setAuthRes('f')
-    }
+        }
+      })
+      .catch((error) => {
+        setAuthRes('f')
+      })
   }
 
   return (
@@ -62,12 +59,6 @@ export default function Register() {
 
         <div className="mt-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block font-medium leading-6 text-blue-900">
-                Conference ID
-              </label>
-              <div className="mt-2">{cid}</div>
-            </div>
             <Input
               id="name"
               label="Name"
@@ -97,7 +88,7 @@ export default function Register() {
               <Paragraph
                 className={authRes === 'f' ? 'mt-1 text-red-600' : 'hidden'}
               >
-                Conference ID is not valid. Please try another.
+                Conference ID is not valid. Please try again.
               </Paragraph>
             </div>
           </form>
