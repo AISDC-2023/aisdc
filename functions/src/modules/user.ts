@@ -110,6 +110,42 @@ export const list = functions
   });
 
 /**
+ * Verify if a given cid belongs to any user.
+ * Return its user type if cid is valid else error.
+ *
+ * @remarks
+ * This function is only callable using Cloud Function SDK
+ *
+ * @param {Object} data - Consist of cid to be verified.
+ * @param {string} data.cid - Conference id to be verified.
+ *
+ * @returns {string} type - Type of user if cid is valid.
+ */
+export const verify = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    const {cid} = data;
+    // Check if cid is 10 digit alphanumeric characters
+    if (!cid || !/^[a-zA-Z0-9]{10}$/.test(cid)) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid CID");
+    }
+    try {
+      const userRecord = await auth.getUser(cid);
+      return {type: userRecord.customClaims?.type};
+    } catch (err: any) {
+      if (err.code === "auth/user-not-found") {
+        throw new functions.https.HttpsError("not-found", "User not found");
+      } else {
+        functions.logger.error(err);
+        throw new functions.https.HttpsError(
+          "unknown",
+          "Unknown error occurred while verifying CID"
+        );
+      }
+    }
+  });
+
+/**
  * Create a new user with new unique conference id.
  *
  * @remarks
