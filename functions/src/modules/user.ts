@@ -110,6 +110,42 @@ export const list = functions
   });
 
 /**
+ * Verify if a given cid belongs to any user.
+ * Return its user type if cid is valid else error.
+ *
+ * @remarks
+ * This function is only callable using Cloud Function SDK
+ *
+ * @param {Object} data - Consist of cid to be verified.
+ * @param {string} data.cid - Conference id to be verified.
+ *
+ * @returns {string} type - Type of user if cid is valid.
+ */
+export const verify = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    const {cid} = data;
+    // Check if cid is 10 digit alphanumeric characters
+    if (!cid || !/^[a-zA-Z0-9]{10}$/.test(cid)) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid CID");
+    }
+    try {
+      const userRecord = await auth.getUser(cid);
+      return {type: userRecord.customClaims?.type};
+    } catch (err: any) {
+      if (err.code === "auth/user-not-found") {
+        throw new functions.https.HttpsError("not-found", "User not found");
+      } else {
+        functions.logger.error(err);
+        throw new functions.https.HttpsError(
+          "unknown",
+          "Unknown error occurred while verifying CID"
+        );
+      }
+    }
+  });
+
+/**
  * Create a new user with new unique conference id.
  *
  * @remarks
@@ -122,6 +158,8 @@ export const list = functions
  * @param {string} data.email - Email of the user
  * @param {string} data.type - Type of the user, one of 'participant','admin'
  * ,'partner
+ * @param {string?} data.cid - Conference id of the user. If not provided, a
+ * new unique cid will be generated.
  *
  * @returns {string} cid - New conference id of user.
  */
@@ -131,12 +169,16 @@ export const create = functions
     const isAdmin = context.auth?.token?.type === "admin";
 
     // Ensure data is well-formatted
-    const {name, email, type} = data;
+    const {name, email, type, cid} = data;
     if (!name || !email || !["particpant", "partner", "admin"].includes(type)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
       );
+    }
+    // Check if cid is 10 digit alphanumeric characters if provided
+    if (cid && !/^[a-zA-Z0-9]{10}$/.test(cid)) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid CID");
     }
 
     // Ensure user is admin if trying to create user beyond participant
@@ -149,10 +191,10 @@ export const create = functions
 
     // Create user in firebase auth and update firestore document
     try {
-      const cid = getCid();
+      const uid = cid ?? getCid();
       // Create new user in firebase auth
       await auth.createUser({
-        uid: cid,
+        uid: uid,
         email: email,
         displayName: name,
         emailVerified: true,
