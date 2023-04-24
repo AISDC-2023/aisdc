@@ -16,7 +16,7 @@ import {PrizeSchema} from "../schema";
  * @param {boolean} data.isRare - Is the prize considered rare?
  */
 export const create = functions
-  .region("asia-northeast1")
+  .region("asia-southeast1")
   .https.onCall(async (data, context) => {
     // Ensure user is authenticated
     if (!context.auth) {
@@ -65,7 +65,7 @@ export const create = functions
  * @returns The object containing object for each prize.
  */
 export const get = functions
-  .region("asia-northeast1")
+  .region("asia-southeast1")
   .https.onCall(async (data, context) => {
     // Ensure user is authenticated
     if (!context.auth) {
@@ -112,7 +112,7 @@ export const get = functions
  * @param {string[]} data.ids - Array of data ids to be deleted.
  */
 export const deletePrize = functions
-  .region("asia-northeast1")
+  .region("asia-southeast1")
   .https.onCall(async (data, context) => {
     // Ensure user is authenticated
     if (!context.auth) {
@@ -167,7 +167,7 @@ export const deletePrize = functions
  * @param {string} data.pid - Prize's id
  */
 export const redeem = functions
-  .region("asia-northeast1")
+  .region("asia-southeast1")
   .https.onCall(async (data, context) => {
     // Ensure user is authenticated
     if (!context.auth) {
@@ -257,7 +257,7 @@ export const redeem = functions
  * @returns The object containing the prize that is drawn.
  */
 export const draw = functions
-  .region("asia-northeast1")
+  .region("asia-southeast1")
   .https.onCall(async (data, context) => {
     // Ensure user is authenticated
     if (!context.auth) {
