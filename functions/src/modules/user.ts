@@ -113,8 +113,9 @@ export const list = functions
  * Create a new user with new unique conference id.
  *
  * @remarks
- * This function is only callable when a user is authenticated, is type admin,
- * and called using Cloud Function SDk.
+ * This function is only callable using Cloud Function SDk
+ * To create user beyond particpant, the user must be authenticated and is
+ * type admin
  *
  * @param {Object} data - Consist of user's name, email and type.
  * @param {string} data.name - Name of the user
@@ -127,26 +128,22 @@ export const list = functions
 export const create = functions
   .region("asia-southeast1")
   .https.onCall(async (data, context) => {
-    // Ensure user is authenticated
-    if (!context.auth) {
-      throw new functions.https.HttpsError(
-        "unauthenticated",
-        "The function must be called while authenticated."
-      );
-    }
-    // Ensure function caller is an admin
-    if (!(context.auth.token?.type != "admin")) {
-      throw new functions.https.HttpsError(
-        "permission-denied",
-        "Not enough permissions to create user"
-      );
-    }
+    const isAdmin = context.auth?.token?.type === "admin";
+
     // Ensure data is well-formatted
     const {name, email, type} = data;
     if (!name || !email || !["particpant", "partner", "admin"].includes(type)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
+      );
+    }
+
+    // Ensure user is admin if trying to create user beyond participant
+    if (!isAdmin && type != "particpant") {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not enough permissions to create user beyond participant"
       );
     }
 
