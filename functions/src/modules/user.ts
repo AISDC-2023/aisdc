@@ -158,6 +158,8 @@ export const verify = functions
  * @param {string} data.email - Email of the user
  * @param {string} data.type - Type of the user, one of 'participant','admin'
  * ,'partner
+ * @param {string?} data.cid - Conference id of the user. If not provided, a
+ * new unique cid will be generated.
  *
  * @returns {string} cid - New conference id of user.
  */
@@ -167,12 +169,16 @@ export const create = functions
     const isAdmin = context.auth?.token?.type === "admin";
 
     // Ensure data is well-formatted
-    const {name, email, type} = data;
+    const {name, email, type, cid} = data;
     if (!name || !email || !["particpant", "partner", "admin"].includes(type)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
       );
+    }
+    // Check if cid is 10 digit alphanumeric characters if provided
+    if (cid && !/^[a-zA-Z0-9]{10}$/.test(cid)) {
+      throw new functions.https.HttpsError("invalid-argument", "Invalid CID");
     }
 
     // Ensure user is admin if trying to create user beyond participant
@@ -185,10 +191,10 @@ export const create = functions
 
     // Create user in firebase auth and update firestore document
     try {
-      const cid = getCid();
+      const uid = cid ?? getCid();
       // Create new user in firebase auth
       await auth.createUser({
-        uid: cid,
+        uid: uid,
         email: email,
         displayName: name,
         emailVerified: true,
