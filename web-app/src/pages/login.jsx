@@ -43,7 +43,7 @@ const QRScanner = (props) => {
                       type === 'partner' ||
                       type === 'participant'
                     ) {
-                      params = '?cid=' + cid
+                      params = 'cid=' + cid
                     } else {
                       setShowQr(false)
                       router.push('/register?cid=' + cid)
