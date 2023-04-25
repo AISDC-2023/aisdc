@@ -17,11 +17,18 @@ const QRScanner = (props) => {
         constraints={{ facingMode: 'environment' }}
         onResult={async (result, error) => {
           if (!!result) {
+            const cid = result?.text;
+            // Check if cid is 10 digit alphanumeric
+            if (cid && !cid.match(/^[a-zA-Z0-9]{10}$/)) {
+              // TODO: Find more elegant way to display this on the page
+              alert('Invalid QR Code')
+              return
+            }
             const func = httpsCallable(functions, 'user-verify')
-            func({ cid: result?.text })
+            func({ cid: cid })
               .then((result) => {
                 let path = ''
-                switch (profile.id) {
+                switch (result.data.type) {
                   case 'admin':
                     path = '/admin?cid=' + cid
                     break
@@ -45,7 +52,8 @@ const QRScanner = (props) => {
               })
           }
           if (!!error) {
-            console.info(error)
+            // Commented error to prevent spamming the console
+            // console.info(error)
           }
         }}
         style={{ width: '100%' }}
