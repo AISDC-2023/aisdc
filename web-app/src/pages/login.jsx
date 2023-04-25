@@ -17,6 +17,7 @@ const QRScanner = (props) => {
     <>
       <QrReader
         constraints={{ facingMode: 'environment' }}
+        scanDelay={1000}
         onResult={async (result, error) => {
           if (!!result) {
             const cid = result?.text;
@@ -28,34 +29,34 @@ const QRScanner = (props) => {
             }
             // if cid is new then process
             if (scanCid !== cid){
-            // valid cid so set
-            setScanCid(cid)
-            const func = httpsCallable(functions, 'user-verify')
-            func({ cid: cid })
-              .then((result) => {
-                //TODO : update code for path, test if FB function work first
-                const type = result.data?.type;
-                const email = result.data?.email;
-                let path = ''
-                switch (type) {
-                  case 'admin':
-                    path = '/admin?cid=' + cid
-                    break
-                  case 'partner':
-                    path = '/partner?cid=' + cid
-                    break
-                  case 'participant':
-                    path = '/participant?cid=' + cid
-                    break
-                  default:
-                    // If user's type is not defined, send them to register page
-                    // TODO: Need convert logic for this to .catch since now throwing 404 error
-                    router.push('/register?cid=' + cid)
-                }
+              // valid cid so set
+              setScanCid(cid);
+              const userVerify = httpsCallable(functions, 'user-verify')
+              userVerify({ cid: cid })
+                .then((result) => {
+                  //TODO : update code for path, test if FB function work first
+                  const type = result.data?.type;
+                  const email = result.data?.email;
+                  let path = ''
+                  switch (type) {
+                    case 'admin':
+                      path = '/admin?cid=' + cid
+                      break
+                    case 'partner':
+                      path = '/partner?cid=' + cid
+                      break
+                    case 'participant':
+                      path = '/participant?cid=' + cid
+                      break
+                    default:
+                      // If user's type is not defined, send them to register page
+                      // TODO: Need convert logic for this to .catch since now throwing 404 error
+                      router.push('/register?cid=' + cid)
+                  }
 
-                sendEmail(cid, email);
-                router.push('/email-sent')
-                // end
+                  sendEmail(cid, email);
+                  router.push('/email-sent')
+                  // end
               })
               .catch((error) => {
                 console.log(error)
