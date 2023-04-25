@@ -39,7 +39,7 @@ export default function Register() {
         if (true) {
           setAuthRes('s')
           const path = '/participant?cid=1234'
-          sendEmail(path, email)
+          sendEmail(id, email)
         } else {
           // already exists or invalid
           setAuthRes('f')

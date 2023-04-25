@@ -20,6 +20,7 @@ const QRScanner = (props) => {
             const func = httpsCallable(functions, 'user-verify')
             func({ cid: result?.text })
               .then((result) => {
+                //TODO : update code for path, test if FB function work first
                 let path = ''
                 switch (profile.id) {
                   case 'admin':
@@ -36,7 +37,7 @@ const QRScanner = (props) => {
                 }
 
                 // this code will run if switch default not triggered
-                sendEmail(path, result.email)
+                sendEmail(cid, result.email)
                 router.push('/email-sent')
                 // end
               })
