@@ -71,7 +71,7 @@ export default function LoginCheck() {
           // Common errors could be invalid email and invalid or expired OTPs.
         })
     }
-  })
+  }, [])
 
   return (
     <>
