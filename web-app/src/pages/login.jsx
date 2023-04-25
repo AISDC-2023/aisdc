@@ -8,6 +8,7 @@ import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
 import { QrReader } from 'react-qr-reader'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { getAuth, sendSignInLinkToEmail } from 'firebase/auth'
 
 const QRScanner = (props) => {
   const router = useRouter()
@@ -28,8 +29,10 @@ const QRScanner = (props) => {
             func({ cid: cid })
               .then((result) => {
                 //TODO : update code for path, test if FB function work first
+                const type = result.data?.type;
+                const email = result.data?.email;
                 let path = ''
-                switch (result.data.type) {
+                switch (type) {
                   case 'admin':
                     path = '/admin?cid=' + cid
                     break
@@ -40,11 +43,12 @@ const QRScanner = (props) => {
                     path = '/participant?cid=' + cid
                     break
                   default:
+                    // If user's type is not defined, send them to register page
+                    // TODO: Need convert logic for this to .catch since now throwing 404 error
                     router.push('/register?cid=' + cid)
                 }
 
-                // this code will run if switch default not triggered
-                sendEmail(cid, result.email)
+                sendEmail(cid, email);
                 router.push('/email-sent')
                 // end
               })
@@ -74,7 +78,7 @@ export default function Scan() {
           <InformationCircleIcon className="mr-3 h-6 w-6"></InformationCircleIcon>
           <span>Do enable camera permissions</span>
         </p>
-        <QRScanner></QRScanner>
+        <QRScanner />
         <Button href="/login" className="mt-5 w-full">
           Back
         </Button>
