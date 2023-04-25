@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 import { useRouter } from 'next/router'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
@@ -12,7 +12,7 @@ import { getAuth, sendSignInLinkToEmail } from 'firebase/auth'
 
 const QRScanner = (props) => {
   const router = useRouter()
-  let [scanCid, setScanCid] = useState('')
+  const scanCidRef = useRef(null);
   return (
     <>
       <QrReader
@@ -28,9 +28,9 @@ const QRScanner = (props) => {
               return
             }
             // if cid is new then process
-            if (scanCid !== cid){
+            if (scanCidRef.current !== cid){
               // valid cid so set
-              setScanCid(cid);
+              scanCidRef.current = cid;
               const userVerify = httpsCallable(functions, 'user-verify')
               userVerify({ cid: cid })
                 .then((result) => {
