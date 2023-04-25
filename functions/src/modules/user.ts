@@ -120,6 +120,7 @@ export const list = functions
  * @param {string} data.cid - Conference id to be verified.
  *
  * @returns {string} type - Type of user if cid is valid.
+ * @returns {string} email - Email of user if cid is valid.
  */
 export const verify = functions
   .region("asia-southeast1")
@@ -131,7 +132,7 @@ export const verify = functions
     }
     try {
       const userRecord = await auth.getUser(cid);
-      return {type: userRecord.customClaims?.type};
+      return {type: userRecord.customClaims?.type, email: userRecord.email};
     } catch (err: any) {
       if (err.code === "auth/user-not-found") {
         throw new functions.https.HttpsError("not-found", "User not found");

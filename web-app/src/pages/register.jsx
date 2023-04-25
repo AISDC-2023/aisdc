@@ -38,8 +38,8 @@ export default function Register() {
         // if success redirect to email link else show error
         if (true) {
           setAuthRes('s')
-          const path = '/participant?cid=1234'
-          sendEmail(id, email)
+          const params = 'cid=1234'
+          sendEmail(params, email)
         } else {
           // already exists or invalid
           setAuthRes('f')
