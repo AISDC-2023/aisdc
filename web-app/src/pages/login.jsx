@@ -54,8 +54,14 @@ const QRScanner = (props) => {
                       router.push('/register?cid=' + cid)
                   }
 
-                  sendEmail(cid, email);
-                  router.push('/email-sent')
+                  sendEmail(cid, email).then(() => {
+                    // The link was successfully sent. Inform the user.
+                    window.localStorage.setItem('emailForSignIn', email)
+                    router.push('/email-sent');
+                  }).catch((error) => {
+                    console.error("Error occured while sending email");
+                    console.error(error);
+                  });
                   // end
               })
               .catch((error) => {
