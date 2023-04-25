@@ -12,6 +12,7 @@ import { getAuth, sendSignInLinkToEmail } from 'firebase/auth'
 
 const QRScanner = (props) => {
   const router = useRouter()
+  let [scanCid, setScanCid] = useState('')
   return (
     <>
       <QrReader
@@ -25,6 +26,10 @@ const QRScanner = (props) => {
               alert('Invalid QR Code')
               return
             }
+            // if cid is new then process
+            if (scanCid !== cid){
+            // valid cid so set
+            setScanCid(cid)
             const func = httpsCallable(functions, 'user-verify')
             func({ cid: cid })
               .then((result) => {
@@ -55,6 +60,7 @@ const QRScanner = (props) => {
               .catch((error) => {
                 console.log(error)
               })
+            }
           }
           if (!!error) {
             // Commented error to prevent spamming the console
