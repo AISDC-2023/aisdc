@@ -54,7 +54,7 @@ export const getInfo = functions
     return {
       name: user?.name,
       type: user?.type,
-      stampsLeft: stampCountRef.data().count,
+      stampCount: user?.stampCount,
       prizeUnredeemed: prizeCountRef.data().count,
       transactions: transactionsRef.docs.map((doc) => doc.data()),
     };

@@ -15,6 +15,7 @@ export interface UserPrizeSchema {
 
 export interface UserTransactionSchema {
   description: string;
+  type: "prize" | "stamp";
   timestamp: Timestamp;
 }
 
