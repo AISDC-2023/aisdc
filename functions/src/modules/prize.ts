@@ -75,18 +75,28 @@ export const get = functions
       );
     }
     // Ensure function caller is an admin
-    if (!(context.auth.token?.type != "admin")) {
+    const userType = context.auth.token?.type;
+    if (["participant", "partner", "admin"].indexOf(userType) == -1) {
       throw new functions.https.HttpsError(
         "permission-denied",
-        "Not enough permissions to create user"
+        "Not enough permissions to get prizes as user type not found"
       );
     }
 
     try {
-      const prizes: {[key: string]: PrizeSchema} = {};
+      const prizes: {[key: string]: any} = {};
       const prizeSnaps = await db.prizes.get();
       prizeSnaps.forEach((doc) => {
-        prizes[doc.id] = doc.data();
+        if (userType == "participant") {
+          prizes[doc.id] = {
+            name: doc.data().name,
+            isRare: doc.data().isRare,
+            // Only show boolean if is particpant
+            isAvailable: doc.data().quantity > 0,
+          };
+        } else {
+          prizes[doc.id] = doc.data();
+        }
       });
       return {
         prizes,
