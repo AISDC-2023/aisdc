@@ -3,6 +3,8 @@ import { Heading } from '@/components/Heading'
 import { Paragraph } from '@/components/Paragraph'
 import { Button } from '@/components/Button'
 import { useState, useEffect } from 'react'
+import { functions } from '@/firebase.js'
+import { httpsCallable } from 'firebase/functions'
 import { auth } from '@/firebase.js'
 import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
 import { useRouter } from 'next/router'
@@ -30,31 +32,29 @@ export default function LoginCheck() {
 
       signInWithEmailLink(auth, email, window.location.href)
         .then((result) => {
-          // new user redirect to ask for name
-          // const isNewUser = result.additionalUserInfo.isNewUser
           setStatus(true)
-
           auth.currentUser
             .getIdTokenResult()
             .then((idTokenResult) => {
               // store details in local storage
               // You can access the new user via result.user
-              window.localStorage.setItem('cid', result.user.uid)
-              window.localStorage.setItem(
-                'displayName',
-                result.user.displayName
-              )
-              const type = idTokenResult.claims.type
-              if (
-                type === 'admin' ||
-                type === 'partner' ||
-                type === 'participant'
-              ) {
-                window.localStorage.setItem('type', type)
-                router.push('/' + type)
-              } else {
-                throw ''
-              }
+              const cid = result.user.uid
+              window.localStorage.setItem('cid', cid)
+              const func = httpsCallable(functions, 'user-getInfo')
+              func({ cid: cid }).then((r) => {
+                window.localStorage.setItem('displayName', r.data.name)
+                const type = r.data.type
+                if (
+                  type === 'admin' ||
+                  type === 'partner' ||
+                  type === 'participant'
+                ) {
+                  window.localStorage.setItem('type', type)
+                  router.push('/' + type)
+                } else {
+                  throw ''
+                }
+              })
             })
             .catch((error) => {
               setShowError(true)

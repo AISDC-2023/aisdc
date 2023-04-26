@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
 import { Button } from '@/components/Button'
@@ -10,7 +10,7 @@ import { Timeline } from '@/components/participant/Timeline'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const activity = [
     {
       id: 1,
@@ -86,26 +86,31 @@ export async function getStaticProps() {
     },
   ]
 
-  // Call an external API endpoint to get posts
-  const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
-  const profile = await res.json()
-  console.log(profile)
+  useEffect(() => {
+  console.log(window.localStorage)
+  }, [window])
+
   return {
     props: {
-      profile,
       activity,
+      stamps,
+      transactions
     },
   }
 }
 
-export default function Participant({ profile, activity }) {
-  let cid = ''
+export default function Participant({ activity, stamps, transactions }) {
+  let [cid, setCid] = useState('')
+  let [name, setName] = useState('')
   useEffect(() => {
-  cid = window.localStorage.getItem('cid')
-  const func = httpsCallable(functions, 'user-getInfo')
-  func({ cid: cid })
-    .then((result) => {
+    setCid(window.localStorage.getItem('cid'))
+    setName(window.localStorage.getItem('name'))
+
+    const func = httpsCallable(functions, 'user-getInfo')
+    func({ cid: cid }).then((result) => {
       console.log(result)
+      transactions = result.transactions
+      stamps = result.stampsLeft + 1
     })
   })
 
@@ -123,6 +128,8 @@ export default function Participant({ profile, activity }) {
         </div>
 
         <Heading headerType="h2" className="text-center">
+          WELCOME <span className="uppercase">{name}</span>
+          <br />
           LET THE GAMES BEGIN!
         </Heading>
         <div>
@@ -143,10 +150,10 @@ export default function Participant({ profile, activity }) {
               <span>Redeem</span>
               <GiftIcon className="ml-3 h-6 w-6" />
             </Button>
-            <StampsCounter count="10" />
+            <StampsCounter count={stamps} />
             <Timeline title="YOUR ACTIVITY" list={activity} />
             <p className="text-center font-mono text-xs text-blue-400">
-              {profile.uid}
+              {cid}
             </p>
           </div>
         </div>
