@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
 import { Button } from '@/components/Button'
@@ -6,6 +7,8 @@ import Image from 'next/image'
 import globeGif from '@/images/globe-spinning.gif'
 import { StampsCounter } from '@/components/participant/StampsCounter'
 import { Timeline } from '@/components/participant/Timeline'
+import { functions } from '@/firebase.js'
+import { httpsCallable } from 'firebase/functions'
 
 export async function getStaticProps() {
   const activity = [
@@ -96,6 +99,16 @@ export async function getStaticProps() {
 }
 
 export default function Participant({ profile, activity }) {
+  let cid = ''
+  useEffect(() => {
+  cid = window.localStorage.getItem('cid')
+  const func = httpsCallable(functions, 'user-getInfo')
+  func({ cid: cid })
+    .then((result) => {
+      console.log(result)
+    })
+  })
+
   return (
     <>
       <ContainerMobile>
