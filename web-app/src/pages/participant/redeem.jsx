@@ -6,72 +6,57 @@ import { StampsCounter } from '@/components/participant/StampsCounter'
 import { Prize } from '@/components/participant/Prize'
 import { Prizes } from '@/components/participant/Prizes'
 import { Timeline } from '@/components/participant/Timeline'
+import { useState, useEffect } from 'react'
+import { functions } from '@/firebase.js'
+import { httpsCallable } from 'firebase/functions'
+import { useRouter } from 'next/router'
 
-export async function getStaticProps() {
-  const activity = [
-    {
-      id: 4,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 40,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 674,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 5674,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-  ]
+export default function Redeem() {
+  const router = useRouter()
 
-  const prizes = [
-    {
-      id: 4,
-      name: 'Prize 1',
-      available: true,
-    },
-    {
-      id: 40,
-      name: 'Prize 12',
-      available: false,
-    },
-  ]
-  // Call an external API endpoint to get posts
-  const res = await fetch('https://random-data-api.com/api/v2/users?size=1')
-  const profile = await res.json()
-  console.log(profile)
-  return {
-    props: {
-      profile,
-      activity,
-      prizes,
-    },
+  // ensure only for participant/ admin
+  function userVerify() {
+    const cid = window.localStorage.getItem('cid')
+    console.log(cid)
+    if (cid !== null) {
+      const func = httpsCallable(functions, 'user-verify')
+      func({ cid: cid })
+        .then((result) => {
+          const type = result.data?.type
+          if (type === 'admin' || type === 'participant') {
+            console.log('alala')
+            return true
+          } else {
+            router.push('/login')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          router.push('/login')
+        })
+    } else {
+      router.push('/login')
+    }
   }
-}
 
-export default function Redeem({ profile, activity, prizes }) {
-  function spinWheel() {
-    alert('Spinning the wheel!')
-  }
+  let [cid, setCid] = useState('')
+  let [name, setName] = useState('')
+  let [stamps, setStamps] = useState(0)
+  let [transactions, setTransactions] = useState([])
+  
+  useEffect(() => {
+    userVerify()
+    setCid(window.localStorage.getItem('cid'))
+    setName(window.localStorage.getItem('name'))
+    const func = httpsCallable(functions, 'user-getInfo')
+    func({ cid: cid }).then((r) => {
+      console.log(r)
+
+      console.log(r.data.transactions)
+      setTransactions(r.data.transactions)
+      setStamps(r.data.stampsLeft)
+    })
+  }, [])
 
   return (
     <>
@@ -87,17 +72,15 @@ export default function Redeem({ profile, activity, prizes }) {
         </div>
 
         <Heading headerType="h2" className="text-center">
-          AYE AYE CAPTAIN!
+          AYE AYE {name}!
         </Heading>
         <div>
           <div className="mt-5 space-y-5">
-            <StampsCounter count="10" />
-            <Prize></Prize>
-            <Prizes title="PRIZES" list={prizes}></Prizes>
-            <Timeline title="REDEMPTION HISTORY" list={activity} />
-            <p className="text-center font-mono text-xs text-blue-400">
-              {profile.uid}
-            </p>
+            <StampsCounter count={stamps} />
+            <Prize stamps={stamps}></Prize>
+            {/* <Timeline title="TRANSACTIONS" list={transactions} /> */}
+            {/* <Prizes title="PRIZES" list={prizes}></Prizes> */}
+            <p className="text-center font-mono text-xs text-blue-400">{cid}</p>
           </div>
         </div>
       </ContainerMobile>

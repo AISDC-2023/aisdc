@@ -9,110 +9,50 @@ import { StampsCounter } from '@/components/participant/StampsCounter'
 import { Timeline } from '@/components/participant/Timeline'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
+import { useRouter } from 'next/router'
 
-export async function getServerSideProps() {
-  const activity = [
-    {
-      id: 1,
-      type: 'applied',
-      content: 'Applied to',
-      target: 'Front End Developer',
-      date: 'Sep 20',
-      datetime: '2020-09-20',
-    },
-    {
-      id: 2,
-      type: 'redeemed',
-      content: 'redeemed to phone screening by',
-      target: 'Bethany Blake',
-      date: 'Sep 22',
-      datetime: '2020-09-22',
-    },
-    {
-      id: 3,
-      type: 'completed',
-      content: 'Completed phone screening with',
-      target: 'Martha Gardner',
-      date: 'Sep 28',
-      datetime: '2020-09-28',
-    },
-    {
-      id: 4,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 40,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 674,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 5674,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 5764,
-      type: 'redeemed',
-      content: 'redeemed to interview by',
-      target: 'Bethany Blake',
-      date: 'Sep 30',
-      datetime: '2020-09-30',
-    },
-    {
-      id: 5,
-      type: 'completed',
-      content: 'Completed interview with',
-      target: 'Katherine Snyder',
-      date: 'Oct 4',
-      datetime: '2020-10-04',
-    },
-  ]
+export default function Participant() {
+  const router = useRouter()
 
-  useEffect(() => {
-  console.log(window.localStorage)
-  }, [window])
-
-  return {
-    props: {
-      activity,
-      stamps,
-      transactions
-    },
+  // ensure only for participant/ admin
+  function userVerify() {
+    const cid = window.localStorage.getItem('cid')
+    console.log(cid)
+    if (cid !== null) {
+      const func = httpsCallable(functions, 'user-verify')
+      func({ cid: cid })
+        .then((result) => {
+          const type = result.data?.type
+          if (type === 'admin' || type === 'participant') {
+            console.log('alala')
+            return true
+          } else {
+            router.push('/login')
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+          router.push('/login')
+        })
+    } else {
+      router.push('/login')
+    }
   }
-}
 
-export default function Participant({ activity, stamps, transactions }) {
   let [cid, setCid] = useState('')
   let [name, setName] = useState('')
+  let [stamps, setStamps] = useState(0)
+  let [transactions, setTransactions] = useState([])
   useEffect(() => {
     setCid(window.localStorage.getItem('cid'))
     setName(window.localStorage.getItem('name'))
 
     const func = httpsCallable(functions, 'user-getInfo')
-    func({ cid: cid }).then((result) => {
-      console.log(result)
-      transactions = result.transactions
-      stamps = result.stampsLeft + 1
+    func({ cid: cid }).then((r) => {
+      setTransactions(r.data.transactions)
+      setStamps(r.data.stampsLeft + 1)
     })
-  })
+  }, [])
 
   return (
     <>
@@ -135,7 +75,7 @@ export default function Participant({ activity, stamps, transactions }) {
         <div>
           <div className="mt-5 space-y-5">
             <Button
-              href="/participant/scan-tickets"
+              href="/participant/scan"
               className="w-full items-center"
               type="button"
             >
@@ -151,10 +91,8 @@ export default function Participant({ activity, stamps, transactions }) {
               <GiftIcon className="ml-3 h-6 w-6" />
             </Button>
             <StampsCounter count={stamps} />
-            <Timeline title="YOUR ACTIVITY" list={activity} />
-            <p className="text-center font-mono text-xs text-blue-400">
-              {cid}
-            </p>
+            <Timeline title="YOUR ACTIVITY" list={transactions} />
+            <p className="text-center font-mono text-xs text-blue-400">{cid}</p>
           </div>
         </div>
       </ContainerMobile>
