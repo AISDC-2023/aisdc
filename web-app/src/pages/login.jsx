@@ -83,7 +83,9 @@ export default function Scan() {
     <>
       <ContainerMobile>
         <Heading headerType="h2" className="mt-6">
-          LOGIN<br/>SCAN QR TO ENTER
+          LOGIN
+          <br />
+          SCAN QR TO ENTER
         </Heading>
         <p className="mt-2 inline-flex text-blue-600">
           <InformationCircleIcon className="mr-3 h-6 w-6"></InformationCircleIcon>

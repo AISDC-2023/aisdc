@@ -9,10 +9,8 @@ import {
 
 export function Timeline({ title, list }) {
   const eventTypes = {
-    applied: { icon: CloudIcon, bgColorClass: 'bg-gray-400' },
-    redeemed: { icon: ArrowPathRoundedSquareIcon, bgColorClass: 'bg-blue-500' },
-    completed: { icon: CheckIcon, bgColorClass: 'bg-green-500' },
-    redeemed: { icon: GiftIcon, bgColorClass: 'bg-orange-600' },
+    stamp: { icon: CheckIcon, bgColorClass: 'bg-green-500' },
+    prize: { icon: GiftIcon, bgColorClass: 'bg-orange-600' },
   }
 
   function classNames(...classes) {
@@ -46,34 +44,40 @@ export function Timeline({ title, list }) {
         {/* Activity Feed */}
         <div className="mt-6 flow-root">
           <ul role="list" className="-mb-8">
-            {list.map((item, itemIdx) => (
-              <li key={item.id}>
-                <div className="relative pb-8">
-                  {itemIdx !== list.length - 1 ? (
-                    <span
-                      className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                  <div className="relative flex space-x-3">
-                    <EventTypeIcon type={item.type}></EventTypeIcon>
-                    <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                      <div>
-                        <Paragraph>
-                          {item.content}{' '}
-                          <a href="#" className="font-medium text-gray-900">
-                            {item.target}
-                          </a>
-                        </Paragraph>
-                      </div>
-                      <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                        <time dateTime={item.datetime}>{item.date}</time>
+            {list.length > 0 ? (
+              list.map((item, itemIdx) => (
+                <li key={item.timestamp._seconds}>
+                  <div className="relative pb-8">
+                    {itemIdx !== list.length - 1 ? (
+                      <span
+                        className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                    <div className="relative flex space-x-3">
+                      {item ? (
+                        <EventTypeIcon type={item.type}></EventTypeIcon>
+                      ) : null}
+                      <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                        <div>
+                          <Paragraph>
+                            {item.description}{' '}
+                            <a href="#" className="font-medium text-gray-900">
+                              {item.description}
+                            </a>
+                          </Paragraph>
+                        </div>
+                        <div className="whitespace-nowrap text-right text-sm text-gray-500">
+                          <time dateTime={item.datetime}>{item.date}</time>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              ))
+            ) : (
+              <p className="mb-8 text-center">No activity yet.</p>
+            )}
           </ul>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
@@ -11,11 +11,11 @@ import { useRouter } from 'next/router'
 
 export default function Scan() {
   const router = useRouter()
+  useEffect(() => {
 
   // ensure only for participant/ admin
   function userVerify() {
     const cid = window.localStorage.getItem('cid')
-    console.log(cid)
     if (cid !== null) {
       const func = httpsCallable(functions, 'user-verify')
       func({ cid: cid })
@@ -36,6 +36,9 @@ export default function Scan() {
       router.push('/login')
     }
   }
+
+  userVerify()
+},[router])
 
   let [ticketRes, setTicketRes] = useState('')
   let [msg, setMsg] = useState('')
