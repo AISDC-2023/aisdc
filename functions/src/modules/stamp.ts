@@ -107,6 +107,7 @@ export const redeem = functions
       await db.userTransactions(cid).add({
         description: `Redeemed stamp ${stamp.name}`,
         timestamp: FieldValue.serverTimestamp(),
+        type: "stamp",
       });
     } catch (err) {
       functions.logger.error(err);

@@ -241,6 +241,7 @@ export const redeem = functions
       await db.userTransactions(cid).add({
         description: `Redeemed prize ${prize.name}`,
         timestamp: FieldValue.serverTimestamp(),
+        type: "prize",
       });
     } catch (err) {
       functions.logger.error(err);
@@ -351,6 +352,7 @@ export const draw = functions
       await db.userTransactions(cid).add({
         description: `Received prize ${prizePool[pid].name}`,
         timestamp: FieldValue.serverTimestamp(),
+        type: "prize",
       });
       return {pid: prizePool[pid]};
     } catch (err) {
