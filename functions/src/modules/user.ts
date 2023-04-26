@@ -40,11 +40,6 @@ export const getInfo = functions
     }
     const user = userRef.data();
     const transactionsRef = await db.userTransactions(cid).get();
-    const stampCountRef = await db
-      .userStamps(cid)
-      .where("redeemed", "==", false)
-      .count()
-      .get();
     const prizeCountRef = await db
       .userPrizes(cid)
       .where("redeemed", "==", false)
