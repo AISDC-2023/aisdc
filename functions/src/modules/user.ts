@@ -197,14 +197,14 @@ export const create = functions
         disabled: false,
       });
       // Set user type into firebase auth claim
-      await auth.setCustomUserClaims(cid, {type});
+      await auth.setCustomUserClaims(uid, {type});
       // Create new firestore document
-      await db.users.doc(cid).set({
+      await db.users.doc(uid).set({
         name: name,
         type: type,
         stampCount: 0,
       });
-      return cid;
+      return uid;
     } catch (err: any) {
       let detail;
       functions.logger.error(err);
