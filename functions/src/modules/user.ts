@@ -24,7 +24,7 @@ export const getInfo = functions
         "The function must be called while authenticated."
       );
     }
-    let cid: string;
+    let cid: string = data.cid;
     if (!(context.auth.token?.type != "admin")) {
       // If user is not admin, get cid from token
       // (i.e. user retrieve its own data)
@@ -40,17 +40,17 @@ export const getInfo = functions
     }
     const user = userRef.data();
     const transactionsRef = await db.userTransactions(cid).get();
-    const prizeCountRef = await db
-      .userPrizes(cid)
-      .where("redeemed", "==", false)
-      .count()
-      .get();
+    const prizeRef = await db.userPrizes(cid).get();
+    const prizes = prizeRef.docs.map((doc) => doc.data());
 
     return {
       name: user?.name,
       type: user?.type,
       stampCount: user?.stampCount,
-      prizeUnredeemed: prizeCountRef.data().count,
+      prizeUnredeemed: prizes.filter((prize) => {
+        !prize.redeemed;
+      }).length,
+      prizes: prizes,
       transactions: transactionsRef.docs.map((doc) => doc.data()),
     };
   });
