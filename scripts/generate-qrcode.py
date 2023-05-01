@@ -7,6 +7,23 @@ import qrcode
 from firebase_admin import credentials
 from firebase_admin import firestore
 
+BOOTHS_INFO = {
+    "1TcFJnMPdOAcYyAgLvb8": "AI Singapore",
+    "FGiA6h2tDAuwWOJqSfHB": "SAP AI Lab",
+    "Kd4vDZaMYpLphHg4FkLr": "Government Technology Agency",
+    "RJm7WuVDeynWLjQoAJjf": (
+        "SpeakEase National AI Student Challenge, Category B Winner"
+    ),
+    "RSZGHOFWAr0mKkkEigc9": "Pand.ai",
+    "UaoJb01IhPqS6jjsdlzf": "Amazon Web Services",
+    "cmfKFXEY5wUlnLWqITwO": "NVIDIA & Edom Technology Co.,Ltd",
+    "d5t5F65WxjqRg3RCcfHk": "The Digital and Intelligence Service",
+    "d8c7NYPvOgdhiIEr2tq9": "Auxilium Mechanica Pentahack Second Prize Winner",
+    "tRH2khWbIQWLVaO4AhCl": "SpeechCoach Pentahack First Prize Winner",
+    "wr0LJ52gTUy4psNaV1E3": "Grab",
+    "TwXoXO18z2SrMc4oyc2T": "BBSC Team",
+}
+
 
 def main(
     qr_prefix: str = "",
@@ -24,11 +41,14 @@ def main(
     # Ensure that the save directory exists
     admin_path = Path(qr_save_dir) / "admin"
     participant_path = Path(qr_save_dir) / "participant"
+    booth_path = Path(qr_save_dir) / "booth"
 
     if not admin_path.exists():
         admin_path.mkdir(parents=True)
     if not participant_path.exists():
         participant_path.mkdir(parents=True)
+    if not booth_path.exists():
+        booth_path.mkdir(parents=True)
     path_dict = {"admin": admin_path, "participant": participant_path}
 
     # Generate QR codes for every user
@@ -40,9 +60,14 @@ def main(
         data = qr_prefix + cid
 
         img = qrcode.make(data)
-        img.save(str(path_dict[role]/f"{cid}.png"))
+        img.save(str(path_dict[role] / f"{cid}.png"))
 
-    print("Generated QR codes for all users")
+    for booth_id, booth_name in BOOTHS_INFO.items():
+        data = booth_id
+        img = qrcode.make(data)
+        img.save(str(booth_path / f"{booth_name}.png"))
+
+    print("Generated QR codes for all users and booths")
 
 
 if __name__ == "__main__":
