@@ -24,8 +24,6 @@ def main(
     firebase_admin.initialize_app(credential=cred)
     db = firestore.client()
 
-    db.collection("Users").document("test").set({})
-
     for _ in range(count):
         cid = "".join(
             random.choices(string.ascii_uppercase + string.digits, k=length)
