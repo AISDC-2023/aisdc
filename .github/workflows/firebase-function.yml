@@ -8,6 +8,7 @@ on:
       - ".firebaserc"
       - "firebase.json"
       - ".github/workflows/firebase-function.yml"
+      - "firestore.rules"
 jobs:
   staging-web:
     runs-on: ubuntu-latest
@@ -28,6 +29,6 @@ jobs:
       - name: Deploy Cloud Functions
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions
+          args: deploy --only functions,firestore:rules
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_AISDC_2023 }}
