@@ -7,8 +7,8 @@ import Prizetable from './prizetable';
 const admin = () => {
   return (
     <>
-      <Prizetable />
       <Usertable />
+      <Prizetable />
     </>
   );
 }

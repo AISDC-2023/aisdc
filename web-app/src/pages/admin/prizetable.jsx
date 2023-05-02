@@ -29,7 +29,7 @@ const Prizetable = () => {
     .filter(([id, prize]) => prize.name.toLowerCase().includes(search.toLowerCase()))
     .reduce((obj, [id, prize]) => ({ ...obj, [id]: prize }), {});
     
-    console.log('filtered prizes', filteredPrizes)
+    //console.log('filtered prizes', filteredPrizes)
   return (
     <div>
       <Container>

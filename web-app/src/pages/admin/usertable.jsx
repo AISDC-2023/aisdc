@@ -4,10 +4,11 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import Link from 'next/link';
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 import { Button } from "react-bootstrap";
+import { useRouter } from 'next/router'
 
 const userlistfunc = httpsCallable(functions, 'user-list')
 const deleteuserfunc = httpsCallable(functions, 'user-deleteUser')
@@ -16,6 +17,7 @@ const Usertable = () => {
   const [userData, setUserData] = useState([]);
   const [search, setSearch] = useState('');
   let [authRes, setAuthRes] = useState('');
+  const router = useRouter()
 
   useEffect(() => {    
     userlistfunc({})
@@ -42,7 +44,6 @@ const Usertable = () => {
       })
   }
   return (
-    <div>
       <Container>
         <h1 className='text-center mt-4'>User Data</h1>
         <Form>
@@ -75,7 +76,11 @@ const Usertable = () => {
               })
               .map((item, index) => (
                 <tr key={index}>
-                  <td>{item.name}</td>
+                  <td>
+                  <Link href={`admin/viewuser?cid=${item.cid}`} style={{ color: 'blue', textDecoration: 'none' }}>
+                    {item.name}
+                  </Link>
+                  </td>
                   <td>{item.email}</td>
                   <td>{item.type}</td>
                   <td>{item.cid}</td>
@@ -85,7 +90,6 @@ const Usertable = () => {
           </tbody>
         </Table>
       </Container>
-    </div>
   );
 }
 
