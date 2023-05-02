@@ -11,8 +11,8 @@ import { useRouter } from 'next/router'
 
 export default function LoginCheck() {
   const router = useRouter()
-  let [status, setStatus] = useState(false)
-  let [showError, setShowError] = useState(false)
+  const [status, setStatus] = useState(false)
+  const [showError, setShowError] = useState(false)
 
   useEffect(() => {
     // Confirm the link is a sign-in with email link.
