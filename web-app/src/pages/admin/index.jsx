@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Usertable from './usertable';
-import Prizetable from './prizetable';
-
+import React, { useState, useEffect } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import Usertable from './usertable'
+import Prizetable from './prizetable'
 
 const admin = () => {
   return (
@@ -10,8 +9,7 @@ const admin = () => {
       <Usertable />
       <Prizetable />
     </>
-  );
+  )
 }
-
 
 export default admin

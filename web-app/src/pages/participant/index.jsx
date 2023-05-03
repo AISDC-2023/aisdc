@@ -14,44 +14,46 @@ import { useRouter } from 'next/router'
 export default function Participant() {
   const router = useRouter()
 
-  let [cid, setCid] = useState('')
-  let [name, setName] = useState('')
-  let [stamps, setStamps] = useState(0)
-  let [transactions, setTransactions] = useState([])
+  const [cid, setCid] = useState('')
+  const [name, setName] = useState('')
+  const [stamps, setStamps] = useState(0)
+  const [transactions, setTransactions] = useState([])
+
+  function userVerify(id) {
+    // ensure only for participant/ admin
+    const func = httpsCallable(functions, 'user-verify')
+    func({ cid: id })
+      .then((result) => {
+        const type = result.data?.type
+        if (type === 'admin' || type === 'participant') {
+          return true
+        } else {
+          router.push('/login')
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        router.push('/login')
+      })
+  }
+
+  function retrieveInfo(id) {
+    const func = httpsCallable(functions, 'user-getInfo')
+    func({ cid: id }).then((r) => {
+      setTransactions(r.data.transactions)
+      setStamps(r.data.stampCount)
+    })
+  }
 
   useEffect(() => {
-    setCid(window.localStorage.getItem('cid'))
-    setName(window.localStorage.getItem('name'))
-    // ensure only for participant/ admin
-    function userVerify() {
-      if (cid !== null) {
-        const func = httpsCallable(functions, 'user-verify')
-        func({ cid: cid })
-          .then((result) => {
-            const type = result.data?.type
-            if (type === 'admin' || type === 'participant') {
-              console.log('alala')
-              return true
-            } else {
-              router.push('/login')
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-            router.push('/login')
-          })
-      } else {
-        router.push('/login')
-      }
-    }
-    userVerify()
+    const id = window.localStorage.getItem('cid')
+    const n = window.localStorage.getItem('name')
+    setCid(id)
+    setName(n)
 
-    const func = httpsCallable(functions, 'user-getInfo')
-    func({ cid: cid }).then((r) => {
-      setTransactions(r.data.transactions)
-      setStamps(r.data.stampsLeft + 1)
-    })
-  }, [router, cid])
+    userVerify(id)
+    retrieveInfo(id)
+  }, [])
 
   return (
     <>

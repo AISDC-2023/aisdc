@@ -20,12 +20,15 @@ export function Prizes({ title, list }) {
       <div className="mt-6 flow-root">
         <ul role="list">
           {list.map((item) => (
-            <li key={item.id} className="relative flex items-center space-x-3">
+            <li
+              key={item.name}
+              className="relative flex items-center space-x-3"
+            >
               <div className="min-w-0 flex-auto">
                 <div className="flex items-center gap-x-3">
                   <div
                     className={classNames(
-                      statuses[item.available],
+                      statuses[item.quantity],
                       'flex-none rounded-full p-1'
                     )}
                   >

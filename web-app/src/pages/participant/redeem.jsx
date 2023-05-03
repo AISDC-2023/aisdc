@@ -5,7 +5,6 @@ import hologramGif from '@/images/hologram.gif'
 import { StampsCounter } from '@/components/participant/StampsCounter'
 import { Prize } from '@/components/participant/Prize'
 import { Prizes } from '@/components/participant/Prizes'
-import { Timeline } from '@/components/participant/Timeline'
 import { useState, useEffect } from 'react'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
@@ -17,44 +16,54 @@ export default function Redeem() {
   let [cid, setCid] = useState('')
   let [name, setName] = useState('')
   let [stamps, setStamps] = useState(0)
-  let [transactions, setTransactions] = useState([])
+  let [prizes, setPrizes] = useState([])
+
+  function userVerify() {
+    const func = httpsCallable(functions, 'user-verify')
+    func({ cid: window.localStorage.getItem('cid') })
+      .then((result) => {
+        const type = result.data?.type
+        if (type === 'admin' || type === 'participant') {
+          return true
+        } else {
+          router.push('/login')
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        router.push('/login')
+      })
+  }
+
+  function retrieveInfo(id) {
+    const func = httpsCallable(functions, 'user-getInfo')
+    func({ cid: id }).then((r) => {
+      setStamps(r.data.stampCount)
+    })
+  }
+
+  function retrievePrizes() {
+    const func = httpsCallable(functions, 'prize-get')
+    func({}).then((r) => {
+      // convert object of objects to array
+      let a = []
+      for (const [key, value] of Object.entries(r.data.prizes)) {
+        a.push(value)
+      }
+      setPrizes(a)
+    })
+  }
 
   useEffect(() => {
-    setCid(window.localStorage.getItem('cid'))
-    setName(window.localStorage.getItem('name'))
-    // ensure only for participant/ admin
-    function userVerify() {
-      if (cid !== null) {
-        const func = httpsCallable(functions, 'user-verify')
-        func({ cid: cid })
-          .then((result) => {
-            const type = result.data?.type
-            if (type === 'admin' || type === 'participant') {
-              console.log('alala')
-              return true
-            } else {
-              router.push('/login')
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-            router.push('/login')
-          })
-      } else {
-        router.push('/login')
-      }
-    }
-    userVerify()
+    const id = window.localStorage.getItem('cid')
+    const n = window.localStorage.getItem('name')
 
-    const func = httpsCallable(functions, 'user-getInfo')
-    func({ cid: cid }).then((r) => {
-      console.log(r)
-
-      console.log(r.data.transactions)
-      setTransactions(r.data.transactions)
-      setStamps(r.data.stampsLeft)
-    })
-  }, [router, cid])
+    setCid(id)
+    setName(n)
+    retrievePrizes()
+    userVerify(id)
+    retrieveInfo(id)
+  }, [])
 
   return (
     <>
@@ -76,8 +85,7 @@ export default function Redeem() {
           <div className="mt-5 space-y-5">
             <StampsCounter count={stamps} />
             <Prize stamps={stamps}></Prize>
-            {/* <Timeline title="TRANSACTIONS" list={transactions} /> */}
-            {/* <Prizes title="PRIZES" list={prizes}></Prizes> */}
+            <Prizes title="PRIZES" list={prizes}></Prizes>
             <p className="text-center font-mono text-xs text-blue-400">{cid}</p>
           </div>
         </div>

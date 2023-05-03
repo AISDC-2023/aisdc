@@ -1,7 +1,6 @@
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
 import { Paragraph } from '@/components/Paragraph'
-import { Button } from '@/components/Button'
 import { useState, useEffect } from 'react'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
@@ -13,6 +12,20 @@ export default function LoginCheck() {
   const router = useRouter()
   const [status, setStatus] = useState(false)
   const [showError, setShowError] = useState(false)
+
+  function getUserInfo(cid) {
+    const userinfofunc = httpsCallable(functions, 'user-getInfo')
+    userinfofunc({ cid: cid }).then((r) => {
+      window.localStorage.setItem('name', r.data.name)
+      const type = r.data.type
+      if (type === 'admin' || type === 'partner' || type === 'participant') {
+        window.localStorage.setItem('type', type)
+        router.push('/' + type)
+      } else {
+        throw ''
+      }
+    })
+  }
 
   useEffect(() => {
     // Confirm the link is a sign-in with email link.
@@ -40,21 +53,7 @@ export default function LoginCheck() {
               // You can access the new user via result.user
               const cid = result.user.uid
               window.localStorage.setItem('cid', cid)
-              const func = httpsCallable(functions, 'user-getInfo')
-              func({ cid: cid }).then((r) => {
-                window.localStorage.setItem('displayName', r.data.name)
-                const type = r.data.type
-                if (
-                  type === 'admin' ||
-                  type === 'partner' ||
-                  type === 'participant'
-                ) {
-                  window.localStorage.setItem('type', type)
-                  router.push('/' + type)
-                } else {
-                  throw ''
-                }
-              })
+              getUserInfo(cid)
             })
             .catch((error) => {
               setShowError(true)
@@ -71,7 +70,7 @@ export default function LoginCheck() {
           // Common errors could be invalid email and invalid or expired OTPs.
         })
     }
-  }, [router])
+  }, [])
 
   return (
     <>
@@ -91,11 +90,6 @@ export default function LoginCheck() {
               ? `Please try to login again`
               : null}
           </Paragraph>
-          {showError ? (
-            <Button href="/login" className="mt-5 w-full">
-              Back to Login
-            </Button>
-          ) : null}
         </div>
       </ContainerMobile>
     </>

@@ -11,34 +11,27 @@ import { useRouter } from 'next/router'
 
 export default function Scan() {
   const router = useRouter()
-  useEffect(() => {
-
   // ensure only for participant/ admin
-  function userVerify() {
-    const cid = window.localStorage.getItem('cid')
-    if (cid !== null) {
-      const func = httpsCallable(functions, 'user-verify')
-      func({ cid: cid })
-        .then((result) => {
-          const type = result.data?.type
-          if (type === 'admin' || type === 'participant') {
-            console.log('alala')
-            return true
-          } else {
-            router.push('/login')
-          }
-        })
-        .catch((error) => {
-          console.log(error)
+  function userVerify(id) {
+    const func = httpsCallable(functions, 'user-verify')
+    func({ cid: IDBDatabase })
+      .then((result) => {
+        const type = result.data?.type
+        if (type === 'admin' || type === 'participant') {
+          return true
+        } else {
           router.push('/login')
-        })
-    } else {
-      router.push('/login')
-    }
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        router.push('/login')
+      })
   }
 
-  userVerify()
-},[router])
+  useEffect(() => {
+    userVerify(window.localStorage.getItem('cid'))
+  }, [])
 
   let [ticketRes, setTicketRes] = useState('')
   let [msg, setMsg] = useState('')

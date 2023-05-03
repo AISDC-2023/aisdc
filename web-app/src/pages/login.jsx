@@ -7,7 +7,7 @@ import { ContainerMobile } from '@/components/ContainerMobile'
 import { Paragraph } from '@/components/Paragraph'
 import { Heading } from '@/components/Heading'
 
-export default function Login({cid}) {
+export default function Login({ cid }) {
   const [unregistered, setShowUnregistered] = useState(false)
   const [verifying, setVerifying] = useState(true)
   const [verified, setVerified] = useState(false)
@@ -42,14 +42,13 @@ export default function Login({cid}) {
               router.push('/email-sent')
             })
             .catch((error) => {
-          console.log(error)
+              console.log(error)
 
               console.error('Error occured while sending email')
             })
           // end
         })
         .catch((error) => {
-        
           setVerifying(false)
           setVerified(false)
         })
@@ -61,9 +60,8 @@ export default function Login({cid}) {
 
   useEffect(() => {
     checks()
-      }, [])
+  }, [])
 
-      
   return (
     <>
       <ContainerMobile>
@@ -99,12 +97,12 @@ Login.getInitialProps = async (ctx) => {
 }
 
 // Login.getInitialProps({ context }) {
-  
+
 //   // console.log(context)
 //   // context value contains the query params
 //   // const cid = context.query.cid;
 //   useEffect(() => {
-    
+
 //   }, [context])
 // const cid = ""
 //   return {

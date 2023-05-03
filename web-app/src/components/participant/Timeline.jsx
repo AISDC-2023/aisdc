@@ -18,21 +18,25 @@ export function Timeline({ title, list }) {
   }
 
   const EventTypeIcon = ({ type }) => {
-    const Icon = eventTypes[type].icon
-    return (
-      <>
-        <div>
-          <span
-            className={classNames(
-              eventTypes[type].bgColorClass,
-              'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-white'
-            )}
-          >
-            <Icon className="h-5 w-5 text-white" aria-hidden="true" />
-          </span>
-        </div>
-      </>
-    )
+    if (eventTypes[type] !== undefined) {
+      const Icon = eventTypes[type].icon
+      return (
+        <>
+          <div>
+            <span
+              className={classNames(
+                eventTypes[type].bgColorClass,
+                'flex h-8 w-8 items-center justify-center rounded-full ring-8 ring-white'
+              )}
+            >
+              <Icon className="h-5 w-5 text-white" aria-hidden="true" />
+            </span>
+          </div>
+        </>
+      )
+    } else {
+      return null
+    }
   }
 
   return (
@@ -60,11 +64,8 @@ export function Timeline({ title, list }) {
                       ) : null}
                       <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                         <div>
-                          <Paragraph>
-                            {item.description}{' '}
-                            <a href="#" className="font-medium text-gray-900">
-                              {item.description}
-                            </a>
+                          <Paragraph className="font-medium text-gray-900">
+                            {item.description}
                           </Paragraph>
                         </div>
                         <div className="whitespace-nowrap text-right text-sm text-gray-500">

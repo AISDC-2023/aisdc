@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from 'react'
+import Table from 'react-bootstrap/Table'
+import Container from 'react-bootstrap/Container'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
@@ -11,34 +11,36 @@ import { httpsCallable } from 'firebase/functions'
 const prizelistfunc = httpsCallable(functions, 'prize-get')
 
 const Prizetable = () => {
-  const [prizeData, setPrizeData] = useState([]);
-  const [search, setSearch] = useState('');
+  const [prizeData, setPrizeData] = useState([])
+  const [search, setSearch] = useState('')
 
-  useEffect(() => {    
+  useEffect(() => {
     prizelistfunc({})
-    .then((res) => {
-      console.log(res.data.prizes)
-      setPrizeData(res.data.prizes)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }, []);
+      .then((res) => {
+        console.log(res.data.prizes)
+        setPrizeData(res.data.prizes)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
 
   const filteredPrizes = Object.entries(prizeData)
-    .filter(([id, prize]) => prize.name.toLowerCase().includes(search.toLowerCase()))
-    .reduce((obj, [id, prize]) => ({ ...obj, [id]: prize }), {});
-    
-    //console.log('filtered prizes', filteredPrizes)
+    .filter(([id, prize]) =>
+      prize.name.toLowerCase().includes(search.toLowerCase())
+    )
+    .reduce((obj, [id, prize]) => ({ ...obj, [id]: prize }), {})
+
+  //console.log('filtered prizes', filteredPrizes)
   return (
     <div>
       <Container>
-        <h1 className='text-center mt-4'>Prizes</h1>
+        <h1 className="mt-4 text-center">Prizes</h1>
         <Form>
-          <InputGroup className='my-3'>
+          <InputGroup className="my-3">
             <Form.Control
               onChange={(e) => setSearch(e.target.value)}
-              placeholder='Search Prize Name'
+              placeholder="Search Prize Name"
             />
           </InputGroup>
         </Form>
@@ -62,7 +64,7 @@ const Prizetable = () => {
         </Table>
       </Container>
     </div>
-  );
+  )
 }
 
-export default Prizetable;
+export default Prizetable
