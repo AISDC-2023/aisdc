@@ -166,7 +166,7 @@ export const create = functions
 
     // Ensure data is well-formatted
     const {name, email, type, cid} = data;
-    if (!name || !email || !["participant", "partner", "admin"].includes(type)) {
+    if(!name || !email || !["participant", "partner", "admin"].includes(type)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
