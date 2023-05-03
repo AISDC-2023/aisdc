@@ -3,6 +3,7 @@ import Table from 'react-bootstrap/Table'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
+import Badge from 'react-bootstrap/Badge';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Link from 'next/link'
 import { functions } from '@/firebase.js'
@@ -45,9 +46,31 @@ const Usertable = () => {
 				})
 		}
 	}
+	const adminCount = userData.reduce((count, user) => {
+		if (user.type === 'admin') {
+		  count++;
+		}
+		return count;
+	  }, 0);
+	
+	const partnerCount = userData.reduce((count, user) => {
+		if (user.type === 'partner') {
+			count++;
+		}
+		return count;
+		}, 0);
+	
+	const participantCount = userData.reduce((count, user) => {
+		if (user.type === 'particpant') {
+			count++;
+		}
+		return count;
+		}, 0);
+
 	return (
 		<Container>
-			<h1 className="mt-4 text-center">User Data</h1>
+			<h1 className="mt-4 text-center"> User Data </h1>
+			<Button variant="success" href={`admin/createuser`}>Create User</Button>
 			<Form>
 				<InputGroup className="my-3">
 					{/* onChange for search */}
@@ -57,10 +80,25 @@ const Usertable = () => {
 					/>
 				</InputGroup>
 			</Form>
-			<Table striped bordered hover responsive>
+			<Table striped bordered hover responsive size="sm">
 				<thead>
 					<tr>
-						<th>Name</th>
+						<th>Name {' '}
+					<Badge bg="primary" className="me-2">
+						{adminCount}
+					</Badge>
+					+ {' '}
+					<Badge bg="warning">
+						{partnerCount}
+					</Badge>
+					{' '} + {' '}
+					<Badge bg="danger">
+						{participantCount}
+					</Badge>
+					{' '} = {' '}
+					<Badge bg="success" className='w-50%'>
+						{userData.length}
+					</Badge></th>
 						<th>Email</th>
 						<th>Type</th>
 						<th>Conference ID</th>
@@ -89,7 +127,7 @@ const Usertable = () => {
 								<td>{item.type}</td>
 								<td>{item.cid}</td>
 								<td>
-									<Button variant="danger" onClick={() => deleteUser(item.cid, item.name)}>
+									<Button variant="danger" size="sm" onClick={() => deleteUser(item.cid, item.name)}>
 										Delete
 									</Button>
 								</td>
