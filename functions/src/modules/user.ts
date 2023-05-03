@@ -25,7 +25,7 @@ export const getInfo = functions
       );
     }
     let cid: string = data.cid;
-    if (!(context.auth.token?.type != "admin")) {
+    if (context.auth.token?.type != "admin") {
       // If user is not admin, get cid from token
       // (i.e. user retrieve its own data)
       cid = context.auth.uid;
