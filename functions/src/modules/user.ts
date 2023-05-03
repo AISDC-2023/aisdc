@@ -146,7 +146,7 @@ export const verify = functions
  *
  * @remarks
  * This function is only callable using Cloud Function SDk
- * To create user beyond participant, the user must be authenticated and is
+ * To create user beyond particpant, the user must be authenticated and is
  * type admin
  *
  * @param {Object} data - Consist of user's name, email and type.
@@ -166,7 +166,7 @@ export const create = functions
 
     // Ensure data is well-formatted
     const {name, email, type, cid} = data;
-    if(!name || !email || !["participant", "partner", "admin"].includes(type)) {
+    if (!name || !email || !["particpant", "partner", "admin"].includes(type)) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
@@ -178,7 +178,7 @@ export const create = functions
     }
 
     // Ensure user is admin if trying to create user beyond participant
-    if (!isAdmin && type != "participant") {
+    if (!isAdmin && type != "particpant") {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user beyond participant"
