@@ -26,10 +26,10 @@ export const create = functions
       );
     }
     // Ensure function caller is an admin
-    if (!(context.auth.token?.type != "admin")) {
+    if (context.auth.token?.type != "admin") {
       throw new functions.https.HttpsError(
         "permission-denied",
-        "Not enough permissions to create user"
+        "Not enough permissions to create prize"
       );
     }
     // Ensure data is well-formatted
