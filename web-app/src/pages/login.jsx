@@ -14,7 +14,7 @@ export default function Login() {
   const router = useRouter()
 
   function checks(cid) {
-    if (cid !== '') {
+    if (cid !== null) {
       const userVerify = httpsCallable(functions, 'user-verify')
       userVerify({ cid: cid })
         .then((result) => {
@@ -52,9 +52,6 @@ export default function Login() {
           setVerifying(false)
           setVerified(false)
         })
-    } else {
-      setVerifying(false)
-      setVerified(false)
     }
   }
 
