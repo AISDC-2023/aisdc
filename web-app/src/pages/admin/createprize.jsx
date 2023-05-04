@@ -8,7 +8,7 @@ import { Button as Bootbutton } from 'react-bootstrap';
 import { Button } from '@/components/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const createprize = () => {
+function CreatePrize () {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     function handleSubmit(event) {
@@ -73,4 +73,4 @@ const createprize = () => {
     )
 }
 
-export default createprize
+export default CreatePrize
