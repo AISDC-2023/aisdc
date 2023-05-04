@@ -3,12 +3,14 @@ import Table from 'react-bootstrap/Table'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
+import { Button } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 
 const prizelistfunc = httpsCallable(functions, 'prize-get')
+const deleteprizefunc = httpsCallable(functions, 'user-deletePrize')
 
 const Prizetable = () => {
   const [prizeData, setPrizeData] = useState([])
@@ -36,6 +38,7 @@ const Prizetable = () => {
     <div>
       <Container>
         <h1 className="mt-4 text-center">Prizes</h1>
+        <Button variant="success" href={`admin/createprize`}>Create Prize</Button>
         <Form>
           <InputGroup className="my-3">
             <Form.Control
