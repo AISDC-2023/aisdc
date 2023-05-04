@@ -7,13 +7,13 @@ import { ContainerMobile } from '@/components/ContainerMobile'
 import { Paragraph } from '@/components/Paragraph'
 import { Heading } from '@/components/Heading'
 
-export default function Login({ cid }) {
+export default function Login() {
   const [unregistered, setShowUnregistered] = useState(false)
   const [verifying, setVerifying] = useState(true)
   const [verified, setVerified] = useState(false)
   const router = useRouter()
 
-  function checks() {
+  function checks(cid) {
     if (cid !== '') {
       const userVerify = httpsCallable(functions, 'user-verify')
       userVerify({ cid: cid })
@@ -59,8 +59,9 @@ export default function Login({ cid }) {
   }
 
   useEffect(() => {
-    checks()
-  }, [])
+    const cid = router.query.cid
+    checks(cid)
+  }, [router])
 
   return (
     <>
