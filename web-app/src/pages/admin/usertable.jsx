@@ -4,6 +4,8 @@ import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Badge from 'react-bootstrap/Badge';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Link from 'next/link'
 import { functions } from '@/firebase.js'
@@ -48,29 +50,29 @@ const Usertable = () => {
 	}
 	const adminCount = userData.reduce((count, user) => {
 		if (user.type === 'admin') {
-		  count++;
+			count++;
 		}
 		return count;
-	  }, 0);
-	
+	}, 0);
+
 	const partnerCount = userData.reduce((count, user) => {
 		if (user.type === 'partner') {
 			count++;
 		}
 		return count;
-		}, 0);
-	
+	}, 0);
+
 	const participantCount = userData.reduce((count, user) => {
 		if (user.type === 'particpant') {
 			count++;
 		}
 		return count;
-		}, 0);
+	}, 0);
 
 	return (
 		<Container>
 			<h1 className="mt-4 text-center"> User Data </h1>
-			<Button variant="success" href={`admin/createuser`}>Create User</Button>
+			<Button variant="success" href={`admin/createuser`}>Add User</Button>
 			<Form>
 				<InputGroup className="my-3">
 					{/* onChange for search */}
@@ -84,21 +86,52 @@ const Usertable = () => {
 				<thead>
 					<tr>
 						<th>Name {' '}
-					<Badge bg="primary" className="me-2">
-						{adminCount}
-					</Badge>
-					+ {' '}
-					<Badge bg="warning">
-						{partnerCount}
-					</Badge>
-					{' '} + {' '}
-					<Badge bg="danger">
-						{participantCount}
-					</Badge>
-					{' '} = {' '}
-					<Badge bg="success" className='w-50%'>
-						{userData.length}
-					</Badge></th>
+
+							<OverlayTrigger
+								key='top'
+								placement='top'
+								overlay={
+									<Tooltip id={`tooltip-top`}>
+										Admins
+									</Tooltip>
+								}
+							>
+								<Badge bg="primary" className="me-2">
+									{adminCount}
+								</Badge>
+							</OverlayTrigger>
+							+ {' '}
+							<OverlayTrigger
+								key='top'
+								placement='top'
+								overlay={
+									<Tooltip id={`tooltip-top`}>
+										Partners
+									</Tooltip>
+								}
+							>
+								<Badge bg="warning" className="me-2 text-black">
+									{partnerCount}
+								</Badge>
+							</OverlayTrigger>
+							{' '} + {' '}
+							<OverlayTrigger
+								key='top'
+								placement='top'
+								overlay={
+									<Tooltip id={`tooltip-top`}>
+										Participants
+									</Tooltip>
+								}
+							>
+								<Badge bg="danger" className="me-2">
+									{participantCount}
+								</Badge>
+							</OverlayTrigger>
+							{' '} = {' '}
+							<Badge bg="success" className='w-50%'>
+								{adminCount+partnerCount+participantCount}
+							</Badge></th>
 						<th>Email</th>
 						<th>Type</th>
 						<th>Conference ID</th>
