@@ -188,6 +188,8 @@ export const create = functions
     // Create user in firebase auth and update firestore document
     try {
       const uid = cid ?? getCid();
+      // TODO: Check given uid exists in db
+
       // Create new user in firebase auth
       await auth.createUser({
         uid: uid,
