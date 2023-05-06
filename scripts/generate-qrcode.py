@@ -14,7 +14,7 @@ BOOTHS_INFO = {
     "RJm7WuVDeynWLjQoAJjf": (
         "SpeakEase National AI Student Challenge, Category B Winner"
     ),
-    "RSZGHOFWAr0mKkkEigc9": "Pand.ai",
+    "RSZGHOFWAr0mKkkEigc9": "GINA.sg",
     "UaoJb01IhPqS6jjsdlzf": "Amazon Web Services",
     "cmfKFXEY5wUlnLWqITwO": "NVIDIA & Edom Technology Co.,Ltd",
     "d5t5F65WxjqRg3RCcfHk": "The Digital and Intelligence Service",
@@ -22,6 +22,7 @@ BOOTHS_INFO = {
     "tRH2khWbIQWLVaO4AhCl": "SpeechCoach Pentahack First Prize Winner",
     "wr0LJ52gTUy4psNaV1E3": "Grab",
     "TwXoXO18z2SrMc4oyc2T": "BBSC Team",
+    "asHDVrvPDJ2dRT3VIyoG": "Singapore Computer Society",
 }
 
 
