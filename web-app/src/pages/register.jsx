@@ -13,6 +13,7 @@ import { CommandLineIcon } from '@heroicons/react/24/solid'
 export default function Register() {
   const router = useRouter()
   const { cid } = router.query
+  let [errorMsg, setErrorMsg] = useState("Error Occured. Try Again.")
   let [name, setName] = useState('')
   let [email, setEmail] = useState('')
 
@@ -46,7 +47,21 @@ export default function Register() {
         }
       })
       .catch((error) => {
-        setAuthRes('f')
+        console.log(error.code)
+        switch (error.code) {
+          case "functions/invalid-argument":
+            setAuthRes('f');
+            setErrorMsg("Invalid Email Address or Conference ID.");
+            break;
+          case "functions/already-exists":
+            setAuthRes('f');
+            setErrorMsg("Email Address or Conference ID already registered. Try Login instead.");
+            break;
+          case "functions/permission-denied":
+            setAuthRes('f');
+            setErrorMsg("Insufficient Permission");
+            break;
+        }
       })
   }
 
@@ -88,7 +103,7 @@ export default function Register() {
               <Paragraph
                 className={authRes === 'f' ? 'mt-1 text-red-600' : 'hidden'}
               >
-                Conference ID is not valid. Please try again.
+                {errorMsg}
               </Paragraph>
             </div>
           </form>
