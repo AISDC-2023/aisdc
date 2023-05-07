@@ -1,5 +1,6 @@
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
+import { Button } from '@/components/Button'
 import Image from 'next/image'
 import hologramGif from '@/images/hologram.gif'
 import { StampsCounter } from '@/components/participant/StampsCounter'
@@ -86,6 +87,9 @@ export default function Redeem() {
             <StampsCounter count={stamps} />
             <Prize stamps={stamps}></Prize>
             <Prizes title="PRIZES" list={prizes}></Prizes>
+            <Button href="/participant" className="mt-3 w-full">
+              Back
+            </Button>
             <p className="text-center font-mono text-xs text-blue-400">{cid}</p>
           </div>
         </div>
