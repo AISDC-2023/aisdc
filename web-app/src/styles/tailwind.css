@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html {
   background-image: url('/background.png');
   background-attachment: fixed;
   background-position: bottom;
