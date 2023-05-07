@@ -208,7 +208,6 @@ export const create = functions
       });
       return uid;
     } catch (err: any) {
-      let detail;
       functions.logger.error(err);
       // Throw invaid argument error if error was due to firebase error
       if (err.code === "auth/email-already-exists") {
