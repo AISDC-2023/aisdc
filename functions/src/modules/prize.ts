@@ -366,3 +366,64 @@ export const draw = functions
       );
     }
   });
+
+/**
+ * Draw a user from current pool of users based on their stamp count.
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated, is type admin,
+ * and called using Cloud Function SDk.
+ *
+ * @params {Object} data - Empty object
+ * @returns The object containing the userName that is drawn.
+ */
+export const drawUser = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    // Ensure function caller is an admin
+    if (context.auth.token?.type != "admin") {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not enough permissions to draw user"
+      );
+    }
+
+    // Draw user from collection
+    try {
+      const userSnaps = await db.users.get();
+      const userNames: string[] = [];
+      userSnaps.forEach((doc) => {
+        const data = doc.data();
+        for (let i = 0; i < data.stampCount; i++) {
+          userNames.push(data.name);
+        }
+      });
+
+      if (userNames.length === 0) {
+        throw new functions.https.HttpsError(
+          "failed-precondition",
+          "User pool is empty. All users are drawn."
+        );
+      }
+
+      return {
+        userName: userNames[Math.floor(Math.random() * userNames.length)],
+      };
+    } catch (err) {
+      functions.logger.error(err);
+      if (err instanceof functions.https.HttpsError) {
+        throw err;
+      }
+      throw new functions.https.HttpsError(
+        "unknown",
+        "User is not drawn due to firestore error"
+      );
+    }
+  });
