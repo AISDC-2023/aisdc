@@ -64,6 +64,7 @@ export default function Scan() {
                     console.log(result)
                     setTicketRes('s')
                     setMsg('Ticket verified for booth!')
+                    router.push('/participant')
                   })
                   .catch((error) => {
                     setTicketRes('f')
