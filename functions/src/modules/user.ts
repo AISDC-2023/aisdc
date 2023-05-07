@@ -48,7 +48,7 @@ export const getInfo = functions
       type: user?.type,
       stampCount: user?.stampCount,
       prizeUnredeemed: prizes.filter((prize) => {
-        !prize.redeemed;
+        return !prize.redeemed;
       }).length,
       prizes: prizes,
       transactions: transactionsRef.docs.map((doc) => doc.data()),
