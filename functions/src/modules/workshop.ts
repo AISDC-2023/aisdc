@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions";
+import {FieldValue} from "firebase-admin/firestore";
 import {db} from "../firebase";
 
 /**
@@ -13,7 +14,6 @@ import {db} from "../firebase";
  * @returns The list of workshops.
  * @throws {functions.https.HttpsError} - If user is not authenticated.
  */
-
 export const list = functions
   .region("asia-southeast1")
   .https.onCall(async (data, context) => {
@@ -48,5 +48,77 @@ export const list = functions
     }
   });
 
-// export const register = null;
+/**
+ * Register user to a workshop
+ *
+ * @remarks
+ * This function is only callable when a user is authenticated and called using
+ * Cloud Function SDk.
+ *
+ * @param {Object} data - Consist of workshop id
+ * @param {string} data.wid - Id of the workshop
+ */
+export const register = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    const cid = context.auth.uid;
+
+    const {wid} = data;
+    if (!wid) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Workshop id is required"
+      );
+    }
+
+    try {
+      const workshopRef = await db.workshops.doc(wid).get();
+      const workshop = workshopRef.data();
+      if (!workshop) {
+        throw new functions.https.HttpsError(
+          "not-found",
+          `Workshop ${wid} not found`
+        );
+      }
+      if (workshop.registeredUserIds.includes(cid)) {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "User already registered to workshop"
+        );
+      }
+      if (workshop.registeredUserIds.length >= 45) {
+        throw new functions.https.HttpsError(
+          "resource-exhausted",
+          "Workshop is full"
+        );
+      }
+      await workshopRef.ref.update({
+        registeredUserIds: [...workshop.registeredUserIds, cid],
+      });
+      await db.userTransactions(cid).add({
+        type: "workshop",
+        timestamp: FieldValue.serverTimestamp(),
+        description: `Registered to workshop ${workshop.name}`,
+      });
+    } catch (err) {
+      if (err instanceof functions.https.HttpsError) {
+        throw err;
+      }
+
+      functions.logger.error(err);
+      // Throw exception if unknown error
+      throw new functions.https.HttpsError(
+        "unknown",
+        "Unknown error occurred while registering to workshop."
+      );
+    }
+  });
+
 // export const unregister = null;
