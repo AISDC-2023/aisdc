@@ -212,13 +212,21 @@ export const create = functions
       functions.logger.error(err);
       // Throw invaid argument error if error was due to firebase error
       if (err.code === "auth/email-already-exists") {
-        detail = new Error("Email already added");
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "Email already exists, please try again"
+        );
       } else if (err.code == "auth/auth/uid-already-exists") {
-        detail = new Error("CID already exists, please try again");
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "CID already exists, please try again"
+        );
       } else {
-        detail = new Error("User is not added due to unknown error");
+        throw new functions.https.HttpsError(
+          "unknown",
+          "Unknown error occurred while creating user"
+        );
       }
-      throw new functions.https.HttpsError("invalid-argument", detail.message);
     }
   });
 
