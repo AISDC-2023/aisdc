@@ -21,6 +21,7 @@ export default function Participant() {
   const [cid, setCid] = useState('')
   const [name, setName] = useState('')
   const [stamps, setStamps] = useState(0)
+  const [showAdmin, setShowAdmin] = useState(false)
   const [transactions, setTransactions] = useState([])
 
   function userVerify(id) {
@@ -30,6 +31,9 @@ export default function Participant() {
       .then((result) => {
         const type = result.data?.type
         if (type === 'admin' || type === 'participant') {
+          if (type === 'admin') {
+            setShowAdmin(true)
+          }
           return true
         } else {
           router.push('/login')
@@ -79,6 +83,15 @@ export default function Participant() {
         </Heading>
         <div>
           <div className="mt-5 space-y-5">
+            {showAdmin ? (
+              <Button
+                href="/admin"
+                className="w-full items-center"
+                type="button"
+              >
+                Go To Admin
+              </Button>
+            ) : null}
             <Button
               href="/participant/scan"
               className="w-full items-center"
