@@ -80,6 +80,7 @@ export default function Register() {
               type="text"
               required={true}
               value={name}
+              disabled={authRes === "s"}  // disable if register success
               onChange={handleNameChange}
             />
             <Input
@@ -89,9 +90,10 @@ export default function Register() {
               required={true}
               value={email}
               onChange={handleEmailChange}
+              disabled={authRes === "s"}  // disable if register success
             />
             <div>
-              <Button className="w-full" type="submit">
+              <Button className="w-full" type="submit" disabled={authRes === "s"}>
                 Create Account
                 <CommandLineIcon className="ml-3 h-6 w-6" />
               </Button>
