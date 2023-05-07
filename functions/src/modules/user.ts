@@ -219,7 +219,7 @@ export const create = functions
           "already-exists",
           "Email already exists, please try again"
         );
-      } else if (err.code == "auth/auth/uid-already-exists") {
+      } else if (err.code == "auth/uid-already-exists") {
         throw new functions.https.HttpsError(
           "already-exists",
           "CID already exists, please try again"
