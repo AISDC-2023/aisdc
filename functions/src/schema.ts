@@ -34,6 +34,7 @@ export interface WorkshopSchema {
   name: string;
   venue: string;
   time: string;
+  description: string;
   registeredUserIds: string[];
 }
 
