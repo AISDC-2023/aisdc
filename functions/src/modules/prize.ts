@@ -187,7 +187,7 @@ export const redeem = functions
       );
     }
     // Ensure function caller is an admin
-    if (!(context.auth.token?.type != "admin")) {
+    if (context.auth.token?.type != "admin") {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user"
