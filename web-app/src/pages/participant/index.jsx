@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
 import { Button } from '@/components/Button'
-import { CameraIcon, GiftIcon } from '@heroicons/react/24/solid'
+import {
+  CameraIcon,
+  GiftIcon,
+  ComputerDesktopIcon,
+} from '@heroicons/react/24/solid'
 import Image from 'next/image'
 import globeGif from '@/images/globe-spinning.gif'
 import { StampsCounter } from '@/components/participant/StampsCounter'
@@ -90,6 +94,14 @@ export default function Participant() {
             >
               <span>Redeem</span>
               <GiftIcon className="ml-3 h-6 w-6" />
+            </Button>
+            <Button
+              href="/participant/workshops"
+              className="w-full items-center"
+              type="button"
+            >
+              <span>Workshops</span>
+              <ComputerDesktopIcon className="ml-3 h-6 w-6" />
             </Button>
             <StampsCounter count={stamps} />
             <Timeline title="YOUR ACTIVITY" list={transactions} />

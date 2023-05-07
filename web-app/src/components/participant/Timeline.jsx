@@ -2,8 +2,7 @@ import { Heading } from '@/components/Heading'
 import { Paragraph } from '@/components/Paragraph'
 import {
   CheckIcon,
-  ArrowPathRoundedSquareIcon,
-  CloudIcon,
+  ComputerDesktopIcon,
   GiftIcon,
 } from '@heroicons/react/20/solid'
 
@@ -11,6 +10,7 @@ export function Timeline({ title, list }) {
   const eventTypes = {
     stamp: { icon: CheckIcon, bgColorClass: 'bg-green-500' },
     prize: { icon: GiftIcon, bgColorClass: 'bg-orange-600' },
+    workshop: { icon: ComputerDesktopIcon, bgColorClass: 'bg-blue-600' },
   }
 
   function classNames(...classes) {
@@ -50,7 +50,7 @@ export function Timeline({ title, list }) {
           <ul role="list" className="-mb-8">
             {list.length > 0 ? (
               list.map((item, itemIdx) => (
-                <li key={item.timestamp._seconds}>
+                <li key={itemIdx}>
                   <div className="relative pb-8">
                     {itemIdx !== list.length - 1 ? (
                       <span

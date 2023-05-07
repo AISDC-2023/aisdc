@@ -38,7 +38,9 @@ const Prizetable = () => {
     <div>
       <Container>
         <h1 className="mt-4 text-center">Prizes</h1>
-        <Button variant="success" href={`admin/createprize`}>Add Prize</Button>
+        <Button variant="success" href={`admin/createprize`}>
+          Add Prize
+        </Button>
         <Form>
           <InputGroup className="my-3">
             <Form.Control
