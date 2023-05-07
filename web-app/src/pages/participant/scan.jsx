@@ -14,7 +14,7 @@ export default function Scan() {
   // ensure only for participant/ admin
   function userVerify(id) {
     const func = httpsCallable(functions, 'user-verify')
-    func({ cid: IDBDatabase })
+    func({ cid: id })
       .then((result) => {
         const type = result.data?.type
         if (type === 'admin' || type === 'participant') {
