@@ -134,15 +134,15 @@ export const register = functions
 export const unregister = functions
   .region("asia-southeast1")
   .https.onCall(async (data, context) => {
-    // // Ensure user is authenticated
-    // if (!context.auth) {
-    //   throw new functions.https.HttpsError(
-    //     "unauthenticated",
-    //     "The function must be called while authenticated."
-    //   );
-    // }
-    // const cid = context.auth.uid;
-    const cid = "rctNVZ48mQ";
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    const cid = context.auth.uid;
+
     const {wid} = data;
     if (!wid) {
       throw new functions.https.HttpsError(
