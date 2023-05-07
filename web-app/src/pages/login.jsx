@@ -11,6 +11,7 @@ export default function Login() {
   const [unregistered, setShowUnregistered] = useState(false)
   const [verifying, setVerifying] = useState(true)
   const [verified, setVerified] = useState(false)
+  const [cidInvalid, setCidInvalid] = useState(false)
   const router = useRouter()
 
   function checks(cid) {
@@ -49,14 +50,27 @@ export default function Login() {
           // end
         })
         .catch((error) => {
-          setVerifying(false)
-          setVerified(false)
+          if (error.code === 'functions/not-found') {
+            // User is not registered, redirect to register page
+            router.push('/register?cid=' + cid)
+          } else if (error.code === 'functions/invalid-argument') {
+            setVerifying(false)
+            setVerified(false)
+            setCidInvalid(true)
+          } else {
+            console.error(error.code);
+            setVerifying(false)
+            setVerified(false)
+          }
         })
     }
   }
 
   useEffect(() => {
     const cid = router.query.cid
+    if (cid === undefined){
+      setCidInvalid(true);
+    }
     checks(cid)
   }, [router])
 
@@ -70,6 +84,8 @@ export default function Login() {
             ? `SENDING MAIL`
             : unregistered
             ? `UNREGISTERED`
+            : cidInvalid
+            ? `CID IS INVALID. PLEASE LOGIN WITH PROPER URL`
             : `ERROR`}
         </Heading>
         <div className="mt-8">
@@ -80,7 +96,7 @@ export default function Login() {
               ? `Server verified`
               : unregistered
               ? `Redirecting you to register`
-              : `Please try again`}
+              : `Please try again ...`}
           </Paragraph>
         </div>
       </ContainerMobile>

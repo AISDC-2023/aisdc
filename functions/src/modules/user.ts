@@ -166,7 +166,11 @@ export const create = functions
 
     // Ensure data is well-formatted
     const {name, email, type, cid} = data;
-    if (!name || !email || !["particpant", "partner", "admin"].includes(type)) {
+    if (
+      !name ||
+      !email ||
+      !["participant", "partner", "admin"].includes(type)
+    ) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "Invalid arguments"
@@ -208,17 +212,24 @@ export const create = functions
       });
       return uid;
     } catch (err: any) {
-      let detail;
       functions.logger.error(err);
       // Throw invaid argument error if error was due to firebase error
       if (err.code === "auth/email-already-exists") {
-        detail = new Error("Email already added");
-      } else if (err.code == "auth/auth/uid-already-exists") {
-        detail = new Error("CID already exists, please try again");
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "Email already exists, please try again"
+        );
+      } else if (err.code == "auth/uid-already-exists") {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "CID already exists, please try again"
+        );
       } else {
-        detail = new Error("User is not added due to unknown error");
+        throw new functions.https.HttpsError(
+          "unknown",
+          "Unknown error occurred while creating user"
+        );
       }
-      throw new functions.https.HttpsError("invalid-argument", detail.message);
     }
   });
 
