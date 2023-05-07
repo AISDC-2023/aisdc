@@ -9,7 +9,7 @@ const admin = () => {
   return (
     <>
       <Container>
-      <Button href='/participant' style={{ textDecoration: 'none' }}> Participant's page </Button>
+      <Button href='/participant' style={{ textDecoration: 'none' }}> Go to Participant page </Button>
       <Usertable />
       <Prizetable />
       </Container>
