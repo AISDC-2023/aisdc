@@ -21,6 +21,7 @@ export const db: {
   users: FirebaseFirestore.CollectionReference<schema.UserSchema>;
   prizes: FirebaseFirestore.CollectionReference<schema.PrizeSchema>;
   stamps: FirebaseFirestore.CollectionReference<schema.StampSchema>;
+  workshops: FirebaseFirestore.CollectionReference<schema.WorkshopSchema>;
   userPrizes: (
     cid: string
   ) => FirebaseFirestore.CollectionReference<schema.UserPrizeSchema>;
@@ -34,6 +35,7 @@ export const db: {
   users: dataPoint<schema.UserSchema>("Users"),
   prizes: dataPoint<schema.PrizeSchema>("Prizes"),
   stamps: dataPoint<schema.StampSchema>("Stamps"),
+  workshops: dataPoint<schema.WorkshopSchema>("Workshops"),
   userPrizes: (cid: string) =>
     dataPoint<schema.UserPrizeSchema>(`Users/${cid}/Prizes`),
   userStamps: (cid: string) =>

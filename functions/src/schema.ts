@@ -30,6 +30,13 @@ export interface PrizeSchema {
   isRare: boolean;
 }
 
+export interface WorkshopSchema {
+  name: string;
+  venue: string;
+  time: string;
+  registeredUserIds: string[];
+}
+
 export interface StampSchema {
   name: string;
   description: string;
