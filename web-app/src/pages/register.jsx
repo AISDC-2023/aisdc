@@ -33,18 +33,18 @@ export default function Register() {
     const func = httpsCallable(functions, 'user-create')
     func({ name: name, email: email, cid: cid, type: 'participant' })
       .then((result) => {
-        const data = result.data
-        const sanitizedMessage = data.text
-
         // if success redirect to email link else show error
-        if (true) {
-          setAuthRes('s')
-          const params = 'cid=1234'
-          sendEmail(params, email)
-        } else {
-          // already exists or invalid
-          setAuthRes('f')
-        }
+        setAuthRes('s')
+        const params = `cid=${cid}`
+        sendEmail(params, email).then(()=>{
+          // The link was successfully sent. Inform the user.
+          window.localStorage.setItem('emailForSignIn', email);
+          router.push('/email-sent');
+        }).catch((error)=>{
+          console.log(error);
+          setAuthRes('f');
+          setErrorMsg("Error Occured While Sending Email. Try Again.")
+        });
       })
       .catch((error) => {
         console.log(error.code)
@@ -100,7 +100,7 @@ export default function Register() {
               <Paragraph
                 className={authRes === 's' ? 'mt-1 text-green-600' : 'hidden'}
               >
-                Registered! Check your email for the link.
+                Registered! Sending mail...
               </Paragraph>
               <Paragraph
                 className={authRes === 'f' ? 'mt-1 text-red-600' : 'hidden'}
