@@ -8,6 +8,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import Container from 'react-bootstrap/Container'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
+import Table from 'react-bootstrap/Table'
+import { Button as Bootbutton } from 'react-bootstrap'
 
 export default function ViewUserPage() {
   const [userData, setUserData] = useState([])
@@ -34,6 +36,20 @@ export default function ViewUserPage() {
         console.error(err)
         setLoading(false) // set loading state to false in case of error
       })
+  }
+
+  const redeemPrize = (cid, pid, pname) => {
+    if (window.confirm(`Are you sure you want to redeem ${pname}?`)) {
+      const func = httpsCallable(functions, 'prize-redeem')
+      func({ cid: cid, pid: pid })
+        .then((r) => {
+          console.log(r)
+          retrieveInfo(cid)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
   }
 
   return (
@@ -64,31 +80,82 @@ export default function ViewUserPage() {
                 {userData.prizeUnredeemed}{' '}
               </ListGroup.Item>
               <ListGroup.Item>
-                {' '}
-                <b> Prizes: </b>
-                {userData.prizes && userData.prizes.length > 0
-                  ? userData.prizes.map((prize) => {
-                      return (
-                        <div key={prize.id}>
-                          {prize.name} ({prize.count})
-                        </div>
-                      )
-                    })
-                  : 'None'}
+                {userData.prizes && userData.prizes.length > 0 ? (
+                  <Table striped bordered hover responsive>
+                    <thead>
+                      <tr>
+                        <th>Prize Name</th>
+                        <th>Prize ID</th>
+                        <th>Redeem</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userData.prizes.map((prize, index) => (
+                        <tr key={index}>
+                          <td>{prize.name}</td>
+                          <td>{prize.pid}</td>
+                          <td>
+                            {!prize.redeemed ? (
+                              <Bootbutton
+                                variant="success"
+                                size="sm"
+                                onClick={() => redeemPrize(cid, prize.pid, prize.name)}
+                              >
+                                Redeem
+                              </Bootbutton>
+                            ) : (
+                              <Badge bg="secondary">Redeemed</Badge>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  'None'
+                )}
               </ListGroup.Item>
               <ListGroup.Item>
                 {' '}
-                <b> Transactions: </b>
-                {userData.transactions && userData.prizes.length > 0
-                  ? userData.prizes.map((transaction) => {
-                      return (
-                        <div key={transaction.id}>
-                          {transaction.name} ({transaction.count})
-                        </div>
-                      )
-                    })
-                  : 'None'}
+                <b> Activity: </b>
+                {userData.transactions && userData.transactions.length > 0 ? (
+                  <Table striped bordered hover responsive size="sm">
+                    <thead>
+                      <tr>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Timestamp</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {userData.transactions
+                        .sort((a, b) => b.timestamp._seconds - a.timestamp._seconds)
+                        .map((transaction) => (
+                          <tr key={transaction.id}>
+                            <td>{transaction.description}</td>
+                            <td>{transaction.type}</td>
+                            <td>
+                              {new Date(transaction.timestamp._seconds * 1000).toLocaleString('en-GB', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: true,
+                              })}
+                            </td>
+
+                          </tr>
+                        ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  'None'
+                )}
+
               </ListGroup.Item>
+
             </ListGroup>
           </div>
         )}
