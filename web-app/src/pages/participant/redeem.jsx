@@ -37,8 +37,14 @@ export default function Redeem() {
   }
 
   function retrieveInfo(id) {
+    let idn = null
+    if (!id) {
+      idn = cid
+    } else {
+      idn = id
+    }
     const func = httpsCallable(functions, 'user-getInfo')
-    func({ cid: id }).then((r) => {
+    func({ cid: idn }).then((r) => {
       setStamps(r.data.stampCount)
     })
   }
@@ -85,7 +91,7 @@ export default function Redeem() {
         <div>
           <div className="mt-5 space-y-5">
             <StampsCounter count={stamps} />
-            <Prize stamps={stamps}></Prize>
+            <Prize stamps={stamps} click={retrieveInfo}></Prize>
             <Prizes title="PRIZES" list={prizes}></Prizes>
             <Button href="/participant" className="mt-3 w-full">
               Back

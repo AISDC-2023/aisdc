@@ -8,26 +8,34 @@ import { Paragraph } from '@/components/Paragraph'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 
-export function Prize({ stamps }) {
+export function Prize(props) {
   const [isClicked, setIsClicked] = useState(false)
   const [isDrawn, setIsDrawn] = useState(false)
   const [prizeName, setPrize] = useState('')
   const [noError, showNoError] = useState(true)
+  const [msg, setMsg] = useState('')
+
   const handleClick = () => {
     setIsClicked(true)
     // if already clicked, do nothing
-    if (stamps > 0) {
+    if (props.stamps > 0) {
       if (!isClicked) {
         const func = httpsCallable(functions, 'prize-draw')
         func()
           .then((r) => {
-            console.log()
+            // emit event to parent to get stamp count again
+            props.click()
             const s = `Congratuations! You won ${r.data.pid.name}`
             setPrize(s)
             setIsDrawn(true)
           })
           .catch((e) => {
             showNoError(false)
+            if (e.code === 'functions/failed-precondition') {
+              setMsg('Not enough stamps to redeem prize!')
+            } else {
+              setMsg('Error. Please try again')
+            }
           })
       }
     }
@@ -40,14 +48,14 @@ export function Prize({ stamps }) {
 
   return (
     <>
-      {stamps > 0 ? (
+      {props.stamps > 0 ? (
         noError ? (
           <div>
             <div className="flex justify-center">
               <Image
                 src={Cookie}
-                className={`z-10 w-48 cursor-pointer justify-self-center transition-all duration-[3000ms] ${
-                  isDrawn ? '-translate-x-64 cursor-default' : ''
+                className={`z-10 w-48 justify-self-center transition-all duration-[3000ms] ${
+                  isDrawn ? '-translate-x-64 cursor-default' : 'cursor-pointer'
                 }`}
                 alt=""
                 priority
@@ -88,7 +96,7 @@ export function Prize({ stamps }) {
           </div>
         ) : (
           <Paragraph className="text-center font-semibold text-orange-600">
-            Error. Please try again
+            {msg}
           </Paragraph>
         )
       ) : (

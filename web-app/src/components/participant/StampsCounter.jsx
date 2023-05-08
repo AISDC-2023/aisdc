@@ -12,7 +12,7 @@ export function StampsCounter(props) {
         const newCount = prevCount + 1
         return newCount < targetCount ? newCount : targetCount // clamp count to target value
       })
-    }, 100) // increment count every 200 milliseconds
+    }, 50) // increment every 50ms
 
     return () => clearInterval(intervalId)
   }, [currentCount, targetCount])
