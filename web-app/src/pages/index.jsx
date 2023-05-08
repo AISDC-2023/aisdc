@@ -1,15 +1,12 @@
-import { Hero } from '@/components/index/Hero'
-import { Schedule } from '@/components/index/Schedule'
-import { Speakers } from '@/components/index/Speakers'
-import { Sponsors } from '@/components/index/Sponsors'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 export default function Home() {
-  return (
-    <>
-      <Hero />
-      <Speakers />
-      <Schedule />
-      <Sponsors />
-    </>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/login')
+  }, [router])
+
+  return <></>
 }

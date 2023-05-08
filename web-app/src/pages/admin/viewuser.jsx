@@ -99,7 +99,9 @@ export default function ViewUserPage() {
                               <Bootbutton
                                 variant="success"
                                 size="sm"
-                                onClick={() => redeemPrize(cid, prize.pid, prize.name)}
+                                onClick={() =>
+                                  redeemPrize(cid, prize.pid, prize.name)
+                                }
                               >
                                 Redeem
                               </Bootbutton>
@@ -129,13 +131,17 @@ export default function ViewUserPage() {
                     </thead>
                     <tbody>
                       {userData.transactions
-                        .sort((a, b) => b.timestamp._seconds - a.timestamp._seconds)
+                        .sort(
+                          (a, b) => b.timestamp._seconds - a.timestamp._seconds
+                        )
                         .map((transaction) => (
                           <tr key={transaction.id}>
                             <td>{transaction.description}</td>
                             <td>{transaction.type}</td>
                             <td>
-                              {new Date(transaction.timestamp._seconds * 1000).toLocaleString('en-GB', {
+                              {new Date(
+                                transaction.timestamp._seconds * 1000
+                              ).toLocaleString('en-GB', {
                                 day: '2-digit',
                                 month: '2-digit',
                                 year: '2-digit',
@@ -145,7 +151,6 @@ export default function ViewUserPage() {
                                 hour12: true,
                               })}
                             </td>
-
                           </tr>
                         ))}
                     </tbody>
@@ -153,9 +158,7 @@ export default function ViewUserPage() {
                 ) : (
                   'None'
                 )}
-
               </ListGroup.Item>
-
             </ListGroup>
           </div>
         )}

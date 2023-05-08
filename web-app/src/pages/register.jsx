@@ -13,7 +13,7 @@ import { CommandLineIcon } from '@heroicons/react/24/solid'
 export default function Register() {
   const router = useRouter()
   const { cid } = router.query
-  let [errorMsg, setErrorMsg] = useState("Error Occured. Try Again.")
+  let [errorMsg, setErrorMsg] = useState('Error Occured. Try Again.')
   let [name, setName] = useState('')
   let [email, setEmail] = useState('')
 
@@ -36,31 +36,35 @@ export default function Register() {
         // if success redirect to email link else show error
         setAuthRes('s')
         const params = `cid=${cid}`
-        sendEmail(params, email).then(()=>{
-          // The link was successfully sent. Inform the user.
-          window.localStorage.setItem('emailForSignIn', email);
-          router.push('/email-sent');
-        }).catch((error)=>{
-          console.log(error);
-          setAuthRes('f');
-          setErrorMsg("Error Occured While Sending Email. Try Again.")
-        });
+        sendEmail(params, email)
+          .then(() => {
+            // The link was successfully sent. Inform the user.
+            window.localStorage.setItem('emailForSignIn', email)
+            router.push('/email-sent')
+          })
+          .catch((error) => {
+            console.log(error)
+            setAuthRes('f')
+            setErrorMsg('Error Occured While Sending Email. Try Again.')
+          })
       })
       .catch((error) => {
         console.log(error.code)
         switch (error.code) {
-          case "functions/invalid-argument":
-            setAuthRes('f');
-            setErrorMsg("Invalid Email Address or Conference ID.");
-            break;
-          case "functions/already-exists":
-            setAuthRes('f');
-            setErrorMsg("Email Address or Conference ID already registered. Try Login instead.");
-            break;
-          case "functions/permission-denied":
-            setAuthRes('f');
-            setErrorMsg("Insufficient Permission");
-            break;
+          case 'functions/invalid-argument':
+            setAuthRes('f')
+            setErrorMsg('Invalid Email Address or Conference ID.')
+            break
+          case 'functions/already-exists':
+            setAuthRes('f')
+            setErrorMsg(
+              'Email Address or Conference ID already registered. Try Login instead.'
+            )
+            break
+          case 'functions/permission-denied':
+            setAuthRes('f')
+            setErrorMsg('Insufficient Permission')
+            break
         }
       })
   }
@@ -80,7 +84,7 @@ export default function Register() {
               type="text"
               required={true}
               value={name}
-              disabled={authRes === "s"}  // disable if register success
+              disabled={authRes === 's'} // disable if register success
               onChange={handleNameChange}
             />
             <Input
@@ -90,10 +94,14 @@ export default function Register() {
               required={true}
               value={email}
               onChange={handleEmailChange}
-              disabled={authRes === "s"}  // disable if register success
+              disabled={authRes === 's'} // disable if register success
             />
             <div>
-              <Button className="w-full" type="submit" disabled={authRes === "s"}>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={authRes === 's'}
+              >
                 Create Account
                 <CommandLineIcon className="ml-3 h-6 w-6" />
               </Button>
