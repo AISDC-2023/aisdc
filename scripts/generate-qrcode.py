@@ -54,14 +54,14 @@ def main(
 
     # Generate QR codes for every user
     docs = db.collection("Users").stream()
-    for doc in tqdm.tqdm(docs):
+    for idx, doc in enumerate(tqdm.tqdm(docs)):
         doc_dict = doc.to_dict()
         role = doc_dict["type"]
         cid = doc.id
         data = qr_prefix + cid
 
         img = qrcode.make(data)
-        img.save(str(path_dict[role] / f"{cid}.png"))
+        img.save(str(path_dict[role] / f"{idx+1}.png"))
 
     for booth_id, booth_name in BOOTHS_INFO.items():
         data = booth_id
