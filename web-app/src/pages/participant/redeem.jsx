@@ -8,6 +8,7 @@ import { Prize } from '@/components/participant/Prize'
 import { Prizes } from '@/components/participant/Prizes'
 import { useState, useEffect } from 'react'
 import { functions } from '@/firebase.js'
+import { getUid, getRole } from '@/helpers.js'
 import { httpsCallable } from 'firebase/functions'
 import { useRouter } from 'next/router'
 
@@ -19,21 +20,14 @@ export default function Redeem() {
   let [stamps, setStamps] = useState(0)
   let [prizes, setPrizes] = useState([])
 
-  function userVerify() {
-    const func = httpsCallable(functions, 'user-verify')
-    func({ cid: window.localStorage.getItem('cid') })
-      .then((result) => {
-        const type = result.data?.type
-        if (type === 'admin' || type === 'participant') {
-          return true
-        } else {
-          router.push('/login')
-        }
-      })
-      .catch((error) => {
-        console.log(error)
+  function userVerify(id) {
+    getRole(id).then((role) => {
+      if (role === 'admin' || role === 'participant') {
+        // do nth
+      } else {
         router.push('/login')
-      })
+      }
+    })
   }
 
   function retrieveInfo(id) {
@@ -62,15 +56,18 @@ export default function Redeem() {
   }
 
   useEffect(() => {
-    const id = window.localStorage.getItem('cid')
-    const n = window.localStorage.getItem('name')
-
-    setCid(id)
-    setName(n)
-    retrievePrizes()
-    userVerify(id)
-    retrieveInfo(id)
-  }, [])
+    getUid().then((uid) => {
+      if (!uid) {
+        router.push('/login')
+      }
+      setCid(uid)
+      const n = window.localStorage.getItem('name')
+      setName(n)
+      retrievePrizes()
+      userVerify(uid)
+      retrieveInfo(uid)
+    })
+  }, [router])
 
   return (
     <>

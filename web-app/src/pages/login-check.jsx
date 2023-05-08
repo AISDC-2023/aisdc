@@ -2,9 +2,8 @@ import { ContainerMobile } from '@/components/ContainerMobile'
 import { Heading } from '@/components/Heading'
 import { Paragraph } from '@/components/Paragraph'
 import { useState, useEffect } from 'react'
-import { functions } from '@/firebase.js'
+import { functions, auth } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
-import { auth } from '@/firebase.js'
 import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth'
 import { useRouter } from 'next/router'
 
@@ -14,12 +13,10 @@ export default function LoginCheck() {
   const [showError, setShowError] = useState(false)
 
   function getUserInfo(cid) {
-    const userinfofunc = httpsCallable(functions, 'user-getInfo')
-    userinfofunc({ cid: cid }).then((r) => {
-      window.localStorage.setItem('name', r.data.name)
+    const userVerify = httpsCallable(functions, 'user-verify')
+    userVerify({ cid: cid }).then((r) => {
       const type = r.data.type
-      if (type === 'admin' || type === 'partner' || type === 'participant') {
-        window.localStorage.setItem('type', type)
+      if (type === 'admin' || type === 'participant') {
         router.push('/' + type)
       } else {
         throw ''
@@ -46,20 +43,8 @@ export default function LoginCheck() {
       signInWithEmailLink(auth, email, window.location.href)
         .then((result) => {
           setStatus(true)
-          auth.currentUser
-            .getIdTokenResult()
-            .then((idTokenResult) => {
-              // store details in local storage
-              // You can access the new user via result.user
-              const cid = result.user.uid
-              window.localStorage.setItem('cid', cid)
-              getUserInfo(cid)
-            })
-            .catch((error) => {
-              setShowError(true)
-              console.log(error)
-            })
-
+          const cid = result.user.uid
+          getUserInfo(cid)
           // Clear email from storage.
           window.localStorage.removeItem('emailForSignIn')
         })

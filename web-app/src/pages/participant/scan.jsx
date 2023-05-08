@@ -7,31 +7,30 @@ import { QrReader } from 'react-qr-reader'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
+import { getUid, getRole } from '@/helpers.js'
 import { useRouter } from 'next/router'
 
 export default function Scan() {
   const router = useRouter()
-  // ensure only for participant/ admin
+
   function userVerify(id) {
-    const func = httpsCallable(functions, 'user-verify')
-    func({ cid: id })
-      .then((result) => {
-        const type = result.data?.type
-        if (type === 'admin' || type === 'participant') {
-          return true
-        } else {
-          router.push('/login')
-        }
-      })
-      .catch((error) => {
-        console.log(error)
+    getRole(id).then((role) => {
+      if (role === 'admin' || role === 'participant') {
+        // do nth
+      } else {
         router.push('/login')
-      })
+      }
+    })
   }
 
   useEffect(() => {
-    userVerify(window.localStorage.getItem('cid'))
-  }, [])
+    getUid().then((uid) => {
+      if (!uid) {
+        router.push('/login')
+      }
+      userVerify(uid)
+    })
+  }, [router])
 
   let [ticketRes, setTicketRes] = useState('')
   let [msg, setMsg] = useState('')
@@ -61,7 +60,6 @@ export default function Scan() {
                 func({ sid: sid })
                   .then((result) => {
                     // null response
-                    console.log(result)
                     setTicketRes('s')
                     setMsg('Ticket verified for booth!')
                     setTimeout(() => {

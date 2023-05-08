@@ -7,6 +7,7 @@ import Image from 'next/image'
 import globeGif from '@/images/globe-spinning.gif'
 import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
+import { getUid, getRole } from '@/helpers.js'
 import { useRouter } from 'next/router'
 import { PaperAirplaneIcon, UserMinusIcon } from '@heroicons/react/24/solid'
 
@@ -19,21 +20,13 @@ export default function Participant() {
   const [list, setWorkshops] = useState([])
 
   function userVerify(id) {
-    // ensure only for participant/ admin
-    const func = httpsCallable(functions, 'user-verify')
-    func({ cid: id })
-      .then((result) => {
-        const type = result.data?.type
-        if (type === 'admin' || type === 'participant') {
-          return true
-        } else {
-          router.push('/login')
-        }
-      })
-      .catch((error) => {
-        console.log(error)
+    getRole(id).then((role) => {
+      if (role === 'admin' || role === 'participant') {
+        // do nth
+      } else {
         router.push('/login')
-      })
+      }
+    })
   }
 
   function retrieveInfo(id) {
@@ -105,14 +98,17 @@ export default function Participant() {
   }
 
   useEffect(() => {
-    const id = window.localStorage.getItem('cid')
-    const n = window.localStorage.getItem('name')
-    setCid(id)
-    setName(n)
-
-    userVerify(id)
-    retrieveInfo(id)
-  }, [])
+    getUid().then((uid) => {
+      if (!uid) {
+        router.push('/login')
+      }
+      setCid(uid)
+      const n = window.localStorage.getItem('name')
+      setName(n)
+      userVerify(uid)
+      retrieveInfo(uid)
+    })
+  }, [router])
 
   return (
     <>

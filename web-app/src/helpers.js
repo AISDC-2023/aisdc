@@ -1,4 +1,7 @@
 import { getAuth, sendSignInLinkToEmail, onAuthStateChanged  } from 'firebase/auth'
+import { useRouter } from 'next/router'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '@/firebase.js'
 
 export function sendEmail(params, email) {
   const auth = getAuth()
@@ -17,6 +20,7 @@ export async function getUid() {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
         const uid = user.uid;
+        window.localStorage.setItem('name', user.displayName)
         resolve(uid);
       } else {
         // User is signed out
@@ -24,5 +28,16 @@ export async function getUid() {
         reject(null)
       }
     });
+  })
+}
+
+export async function getRole(id) {
+  return new Promise((resolve, reject) => {
+  const f = httpsCallable(functions, 'user-verify')
+  f({ cid: id })
+    .then((r) => {
+      const type = r.data?.type
+      resolve(type)
+    })
   })
 }

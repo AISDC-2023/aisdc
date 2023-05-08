@@ -85,7 +85,7 @@ export default function Login() {
             setVerified(false)
             setCidInvalid(true)
           } else {
-            checks(uid)
+            checks(cid)
           }
       }
     })
