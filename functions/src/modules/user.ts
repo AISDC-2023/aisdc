@@ -39,7 +39,10 @@ export const getInfo = functions
       throw new functions.https.HttpsError("not-found", "User not found.");
     }
     const user = userRef.data();
-    const transactionsRef = await db.userTransactions(cid).get();
+    const transactionsRef = await db
+      .userTransactions(cid)
+      .orderBy("timestamp", "desc")
+      .get();
     const prizeRef = await db.userPrizes(cid).get();
     const prizes = prizeRef.docs.map((doc) => doc.data());
 
