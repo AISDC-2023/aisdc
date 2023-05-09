@@ -6,6 +6,7 @@ import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 import { Button as Bootbutton } from 'react-bootstrap'
 import { Button } from '@/components/Button'
+import { sendEmail } from '@/helpers'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function CreateUser() {
@@ -34,6 +35,13 @@ function CreateUser() {
         alert('User created successfully!')
         form.reset() // Reset the form after submission
         setIsSubmitting(false)
+        const params = `cid=${uid}`
+        // Send login email to newly created participant
+        sendEmail(params, email).catch((error)=>{
+          console.log(error)
+          alert("Error sending email" + error.message)
+          setIsSubmitting(false)
+        })
       })
       .catch((error) => {
         alert('Error creating user: ' + error.message)
