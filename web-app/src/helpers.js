@@ -29,7 +29,7 @@ export async function getUid() {
       } else {
         // User is signed out
         // ...
-        reject(null)
+        resolve(null)
       }
     })
   })
