@@ -13,6 +13,10 @@ const admin = () => {
           {' '}
           Go to Participant page{' '}
         </Button>
+        <Button href="/admin/luckydraw" style={{ textDecoration: 'none' }} className='ml-4'>
+          {' '}
+          Lucky Draw{' '}
+        </Button>
         <Usertable />
         <Prizetable />
       </Container>
