@@ -134,8 +134,8 @@ const Usertable = () => {
             .filter((item) => {
               return search.toLowerCase() === ''
                 ? item
-                : item.name.toLowerCase().includes(search) ||
-                    item.cid.toLowerCase().includes(search)
+                : item.name.toLowerCase().includes(search.toLowerCase()) ||
+                    item.cid.toLowerCase().includes(search.toLowerCase())
             })
             .map((item, index) => (
               <tr key={index}>
@@ -160,7 +160,8 @@ const Usertable = () => {
                   </Button>
                 </td>
               </tr>
-            ))}
+            )).slice(0, 50)  // Show only first 50 result to avoid cluttering
+            }
         </tbody>
       </Table>
     </Container>

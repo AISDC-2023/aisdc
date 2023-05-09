@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { functions } from '@/firebase.js'
-import { getAuth, onAuthStateChanged  } from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 import { httpsCallable } from 'firebase/functions'
 import { sendEmail, getUid } from '@/helpers'
@@ -72,24 +72,35 @@ export default function Login() {
   }
 
   useEffect(() => {
-    // check if already logged in
-      getUid().then((uid) => {
-      if (uid) {
-        redirect(uid)
+    if (router.isReady) {
+      // check if exists cid in params
+      const r = router.query.cid
+      if (r !== undefined) {
+        getUid().then((uid) => {
+          // if id in params and current is same, redirect
+          if (uid === r) {
+            redirect(uid)
+          } else {
+            // else do checks to redirect for register or send email link
+            checks(r)
+          }
+        })
       } else {
-        // User not signed in check router
-          const cid = router.query.cid
-          if (cid === undefined) {
-            // cid empty
+        // url cid params dont exists
+        // check if already logged in
+        getUid().then((uid) => {
+          // user is logged in
+          if (uid) {
+            redirect(uid)
+          } else {
+            // cid empty, not logged in
             setVerifying(false)
             setVerified(false)
             setCidInvalid(true)
-          } else {
-            checks(cid)
           }
+        })
       }
-    })
-
+    }
   }, [router])
 
   return (

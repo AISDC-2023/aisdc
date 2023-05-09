@@ -6,6 +6,7 @@ import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 import { Button as Bootbutton } from 'react-bootstrap'
 import { Button } from '@/components/Button'
+import { sendEmail } from '@/helpers'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function CreateUser() {
@@ -29,12 +30,18 @@ function CreateUser() {
     setIsSubmitting(true)
 
     const func = httpsCallable(functions, 'user-create')
-    console.log(name, email, type)
-    func({ name: name, email: email, type: type })
-      .then(() => {
+    func({ name: name, email: email, type: type, cid: cid })
+      .then((uid) => {
         alert('User created successfully!')
         form.reset() // Reset the form after submission
         setIsSubmitting(false)
+        const params = `cid=${uid}`
+        // Send login email to newly created participant
+        sendEmail(params, email).catch((error)=>{
+          console.log(error)
+          alert("Error sending email" + error.message)
+          setIsSubmitting(false)
+        })
       })
       .catch((error) => {
         alert('Error creating user: ' + error.message)
@@ -66,7 +73,7 @@ function CreateUser() {
         </FloatingLabel>
         <FloatingLabel controlId="type" label="Type" className="mb-4 mt-3">
           <Form.Select aria-label="Type" disabled={isSubmitting}>
-            <option value="particpant">Participant</option>
+            <option value="participant">Participant</option>
             <option value="admin">Admin</option>
             <option value="partner">Partner</option>
           </Form.Select>
