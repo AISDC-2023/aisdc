@@ -185,7 +185,7 @@ export const create = functions
     }
 
     // Ensure user is admin if trying to create user beyond participant
-    if (!isAdmin && type != "particpant") {
+    if (!isAdmin && type != "participant") {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user beyond participant"
@@ -195,7 +195,16 @@ export const create = functions
     // Create user in firebase auth and update firestore document
     try {
       const uid = cid ?? getCid();
-      // TODO: Check given uid exists in db
+      // Check given uid exists in db for non-admin user
+      if (!isAdmin) {
+        const userRef = await db.users.doc(uid).get();
+        if (!userRef.exists) {
+          throw new functions.https.HttpsError(
+            "failed-precondition",
+            "CID not found in database"
+          );
+        }
+      }
 
       // Create new user in firebase auth
       await auth.createUser({
@@ -207,12 +216,15 @@ export const create = functions
       });
       // Set user type into firebase auth claim
       await auth.setCustomUserClaims(uid, {type});
-      // Create new firestore document
-      await db.users.doc(uid).set({
-        name: name,
-        type: type,
-        stampCount: 0,
-      });
+      // Update firestore document if document exists, else create
+      await db.users.doc(uid).set(
+        {
+          name: name,
+          type: type,
+          stampCount: 0,
+        },
+        {merge: true}
+      );
       return uid;
     } catch (err: any) {
       functions.logger.error(err);
@@ -227,6 +239,8 @@ export const create = functions
           "already-exists",
           "CID already exists, please try again"
         );
+      } else if (err instanceof functions.https.HttpsError) {
+        throw err;
       } else {
         throw new functions.https.HttpsError(
           "unknown",
