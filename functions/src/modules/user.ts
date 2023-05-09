@@ -185,7 +185,7 @@ export const create = functions
     }
 
     // Ensure user is admin if trying to create user beyond participant
-    if (!isAdmin && type != "particpant") {
+    if (!isAdmin && type != "participant") {
       throw new functions.https.HttpsError(
         "permission-denied",
         "Not enough permissions to create user beyond participant"
