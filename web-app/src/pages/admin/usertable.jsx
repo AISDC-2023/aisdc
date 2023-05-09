@@ -160,7 +160,8 @@ const Usertable = () => {
                   </Button>
                 </td>
               </tr>
-            ))}
+            )).slice(0, 20)  // Show only first 20 result to avoid cluttering
+            }
         </tbody>
       </Table>
     </Container>
