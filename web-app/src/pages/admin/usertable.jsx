@@ -130,38 +130,40 @@ const Usertable = () => {
           </tr>
         </thead>
         <tbody>
-          {userData
-            .filter((item) => {
-              return search.toLowerCase() === ''
-                ? item
-                : item.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.cid.toLowerCase().includes(search.toLowerCase())
-            })
-            .map((item, index) => (
-              <tr key={index}>
-                <td>
-                  <Link
-                    href={`admin/viewuser?cid=${item.cid}`}
-                    style={{ color: 'blue', textDecoration: 'none' }}
-                  >
-                    {item.name}
-                  </Link>
-                </td>
-                <td>{item.cid}</td>
-                <td>{item.type}</td>
-                <td>{item.email}</td>
-                <td>
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => deleteUser(item.cid, item.name)}
-                  >
-                    Delete
-                  </Button>
-                </td>
-              </tr>
-            )).slice(0, 50)  // Show only first 50 result to avoid cluttering
-            }
+          {
+            userData
+              .filter((item) => {
+                return search.toLowerCase() === ''
+                  ? item
+                  : item.name.toLowerCase().includes(search.toLowerCase()) ||
+                      item.cid.toLowerCase().includes(search.toLowerCase())
+              })
+              .map((item, index) => (
+                <tr key={index}>
+                  <td>
+                    <Link
+                      href={`admin/viewuser?cid=${item.cid}`}
+                      style={{ color: 'blue', textDecoration: 'none' }}
+                    >
+                      {item.name}
+                    </Link>
+                  </td>
+                  <td>{item.cid}</td>
+                  <td>{item.type}</td>
+                  <td>{item.email}</td>
+                  <td>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => deleteUser(item.cid, item.name)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))
+              .slice(0, 50) // Show only first 50 result to avoid cluttering
+          }
         </tbody>
       </Table>
     </Container>

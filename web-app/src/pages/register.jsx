@@ -67,7 +67,9 @@ export default function Register() {
             break
           case 'functions/failed-precondition':
             setAuthRes('f')
-            setErrorMsg(`CID of ${cid} does not exist in database. Please contact us at the registration booth for further assistant`)
+            setErrorMsg(
+              `CID of ${cid} does not exist in database. Please contact us at the registration booth for further assistant`
+            )
             break
         }
       })

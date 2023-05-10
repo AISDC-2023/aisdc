@@ -37,9 +37,9 @@ function CreateUser() {
         setIsSubmitting(false)
         const params = `cid=${uid}`
         // Send login email to newly created participant
-        sendEmail(params, email).catch((error)=>{
+        sendEmail(params, email).catch((error) => {
           console.log(error)
-          alert("Error sending email" + error.message)
+          alert('Error sending email' + error.message)
           setIsSubmitting(false)
         })
       })

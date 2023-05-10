@@ -28,10 +28,16 @@ export default function Admin() {
   return (
     <>
       <Container>
-        <Button style={{ textDecoration: 'none' }} onClick={() => { router.push('/participant') }}>
-          {' '}Go to Participant page{' '}
+        <Button
+          style={{ textDecoration: 'none' }}
+          onClick={() => {
+            router.push('/participant')
+          }}
+        >
+          {' '}
+          Go to Participant page{' '}
         </Button>
-        <Button className='ml-4' href="admin/luckydraw">
+        <Button className="ml-4" href="admin/luckydraw">
           Lucky Draw
         </Button>
         <Usertable />
