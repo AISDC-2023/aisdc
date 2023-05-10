@@ -13,7 +13,7 @@ export default function Admin() {
   const router = useRouter()
   const userVerify = httpsCallable(functions, 'user-verify')
 
-  useEffect(()=>{
+  useEffect(() => {
     getUid().then((cid) => {
       userVerify({ cid: cid }).then((result) => {
         const type = result.data?.type
@@ -28,13 +28,11 @@ export default function Admin() {
   return (
     <>
       <Container>
-        <Button href="/participant" style={{ textDecoration: 'none' }}>
-          {' '}
-          Go to Participant page{' '}
+        <Button style={{ textDecoration: 'none' }} onClick={() => { router.push('/participant') }}>
+          {' '}Go to Participant page{' '}
         </Button>
-        <Button href="/admin/luckydraw" style={{ textDecoration: 'none' }} className='ml-4'>
-          {' '}
-          Lucky Draw{' '}
+        <Button className='ml-4' href="admin/luckydraw">
+          Lucky Draw
         </Button>
         <Usertable />
         <Prizetable />
