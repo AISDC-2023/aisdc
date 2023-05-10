@@ -9,7 +9,7 @@ import { functions } from '@/firebase.js'
 import { httpsCallable } from 'firebase/functions'
 import { getUid, getRole } from '@/helpers.js'
 import { useRouter } from 'next/router'
-import { PaperAirplaneIcon, UserMinusIcon } from '@heroicons/react/24/solid'
+import { PaperAirplaneIcon, UserMinusIcon, FlagIcon} from '@heroicons/react/24/solid'
 
 export default function Participant() {
   const router = useRouter()
@@ -138,7 +138,7 @@ export default function Participant() {
             {list.length > 0
               ? list.map((item, itemIdx) => (
                   <div key={item.id}>
-                    <Heading headerType="h3">{item.name}</Heading>
+                    <Heading headerType="h3" className={'inline-flex'}>{item.name} {item.registered ? <FlagIcon className="ml-3 h-6 w-6 text-orange-600" /> : null }</Heading>
                     <Paragraph>{item.description}</Paragraph>
                     <br />
                     <Paragraph>
@@ -151,7 +151,7 @@ export default function Participant() {
                     ) : null}
                   </div>
                 ))
-              : null}
+              : <Heading headerType="h3" className="text-center text-orange-600">Workshops finish already :(</Heading>}
             <Button href="/participant" className="mt-3 w-full">
               Back
             </Button>
