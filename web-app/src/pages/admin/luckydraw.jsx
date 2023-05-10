@@ -11,6 +11,8 @@ const userlistfunc = httpsCallable(functions, 'user-list')
 
 const Luckydraw = () => {
   const [names, setNames] = useState([])
+  const [names2, setNames2] = useState([])
+  const [names3, setNames3] = useState([])
   const [initialLoad, setInitialLoad] = useState(false)
 
   useEffect(() => {
@@ -20,6 +22,8 @@ const Luckydraw = () => {
           (user) => user.type === 'participant'
         )
         setNames(participants)
+        setNames2(participants)
+        setNames3(participants)
       })
       .catch((error) => {
         console.log(error)
@@ -46,19 +50,40 @@ const Luckydraw = () => {
     setNames(filterOutNames)
     setInitialLoad(true)
   }
+
+  function restartRaffle() {
+    setInitialLoad(false);
+    const remainingNames = names2.filter((name) => !names.includes(name))
+    if (remainingNames.length <= 1) { resetNames() }
+    else {
+      setNames(remainingNames)
+      setNames2(remainingNames)
+    }
+  }
+
+  function resetNames() {
+    setInitialLoad(false);
+    setNames(names3);
+    setNames2(names3);
+  }
+
   return (
     <>
       <ContainerMobile>
         <Button href="/admin" style={{ textDecoration: 'none' }}>
-          {' '}
-          Back{' '}
+          {' '}Back{' '}
         </Button>
-        <Heading headerType="h2">Lucky Draw</Heading>
-        <div className="mt-3 space-x-2">
-          <Button onClick={startRaffle}> Start Lucky Draw </Button>
-          <Button onClick={() => setNames(shuffle(names))}> Shuffle </Button>
+        <div className="mt-3 flex justify-center">
+          <Heading headerType="h2" className="mt-4">Lucky Draw</Heading>
         </div>
-        <div className="mt-5">
+        <div className="mt-3 space-x-4 flex justify-center">
+          <Button onClick={() => setNames(shuffle(names))}> Shuffle </Button>
+          <Button onClick={startRaffle}> Start </Button>
+          <Button className="button-outline" onClick={restartRaffle}> Next </Button>
+          <Button className="button-outline" onClick={resetNames}> Reset Names </Button>
+        </div>
+
+        <div className="mt-5 flex justify-center">
           <Transition
             show={names.length > 0}
             enter="transition-opacity duration-500"
@@ -91,13 +116,14 @@ const Luckydraw = () => {
           <Heading headerType="h2" className="mt-6">
             Congrats to the winner!
           </Heading>
-          <div className="mt-5">
+          <div className="mt-5 flex justify-center">
             <Heading headerType="h1" className="text-orange-600">
               {' '}
               {names[0]?.name}{' '}
             </Heading>
           </div>
         </Transition>
+
       </ContainerMobile>
     </>
   )
