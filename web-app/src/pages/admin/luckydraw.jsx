@@ -62,9 +62,11 @@ const Luckydraw = () => {
   }
 
   function resetNames() {
-    setInitialLoad(false);
-    setNames(names3);
-    setNames2(names3);
+    if (window.confirm(`Are you sure you want to reset all the names?`)) {
+      setInitialLoad(false);
+      setNames(names3);
+      setNames2(names3);
+    }
   }
 
   return (
