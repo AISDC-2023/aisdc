@@ -33,6 +33,8 @@ export const list = functions
         return {
           id: doc.id,
           name: data.name,
+          venue: data.venue,
+          time: data.time,
           description: data.description,
           slotsLeft: 45 - data.registeredUserIds.length,
           registered: data.registeredUserIds.includes(context.auth?.uid ?? ""),
