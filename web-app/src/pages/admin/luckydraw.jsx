@@ -113,7 +113,7 @@ const Luckydraw = () => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Heading headerType="h2" className="mt-6">
+          <Heading headerType="h2" className="mt-6 flex justify-center">
             Congrats to the winner!
           </Heading>
           <div className="mt-5 flex justify-center">
