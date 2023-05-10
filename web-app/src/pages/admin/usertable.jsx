@@ -63,7 +63,7 @@ const Usertable = () => {
   }, 0)
 
   const participantCount = userData.reduce((count, user) => {
-    if (user.type === 'particpant') {
+    if (user.type === 'participant') {
       count++
     }
     return count
