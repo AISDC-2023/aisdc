@@ -18,6 +18,7 @@ export default function Participant() {
   const [name, setName] = useState('')
   const [res, setRes] = useState(false)
   const [list, setWorkshops] = useState([])
+  const [isLoading, setLoading] = useState(true)
 
   function userVerify(id) {
     getRole(id).then((role) => {
@@ -107,6 +108,7 @@ export default function Participant() {
       setName(n)
       userVerify(uid)
       retrieveInfo(uid)
+      setLoading(false)
     })
   }, [router])
 
@@ -135,12 +137,18 @@ export default function Participant() {
         </Paragraph>
         <div>
           <div className="mt-5 space-y-5">
-            {list.length > 0
+            { isLoading === false ? list.length > 0
               ? list.map((item, itemIdx) => (
                   <div key={item.id}>
                     <Heading headerType="h3" className={'inline-flex'}>{item.name} {item.registered ? <FlagIcon className="ml-3 h-6 w-6 text-orange-600" /> : null }</Heading>
                     <Paragraph>{item.description}</Paragraph>
                     <br />
+                    <Paragraph>
+                      Venue: <strong>{item.venue}</strong>
+                    </Paragraph>
+                    <Paragraph>
+                      Time: <strong>{item.time}</strong>
+                    </Paragraph>
                     <Paragraph>
                       Slots left: <strong>{item.slotsLeft}</strong>
                     </Paragraph>
@@ -151,7 +159,7 @@ export default function Participant() {
                     ) : null}
                   </div>
                 ))
-              : <Heading headerType="h3" className="text-center text-orange-600">Workshops finish already :(</Heading>}
+              : <Heading headerType="h3" className="text-center text-orange-600">Workshops finish already :(</Heading> : null }
             <Button href="/participant" className="mt-3 w-full">
               Back
             </Button>
