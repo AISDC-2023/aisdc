@@ -29,7 +29,7 @@ def main(
             random.choices(string.ascii_uppercase + string.digits, k=length)
         )
 
-        user_ref = db.collection("Users").document(cid)
+        user_ref = db.collection("Users_new").document(cid)
         user_ref.set({"name": None, "type": role, "stampCount": 0})
 
     print(

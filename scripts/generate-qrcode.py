@@ -41,7 +41,7 @@ def main(
 
     # Ensure that the save directory exists
     admin_path = Path(qr_save_dir) / "admin"
-    participant_path = Path(qr_save_dir) / "participant"
+    participant_path = Path(qr_save_dir) / "participant" / "strip"
     booth_path = Path(qr_save_dir) / "booth"
 
     if not admin_path.exists():
@@ -53,7 +53,7 @@ def main(
     path_dict = {"admin": admin_path, "participant": participant_path}
 
     # Generate QR codes for every user
-    docs = db.collection("Users").stream()
+    docs = db.collection("Users_new").stream()
     for idx, doc in enumerate(tqdm.tqdm(docs)):
         doc_dict = doc.to_dict()
         role = doc_dict["type"]
