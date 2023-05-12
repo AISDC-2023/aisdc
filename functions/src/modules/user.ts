@@ -302,3 +302,35 @@ export const deleteUser = functions
       );
     }
   });
+
+export const listStamp = functions
+  .region("asia-southeast1")
+  .https.onCall(async (data, context) => {
+    // Ensure user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "The function must be called while authenticated."
+      );
+    }
+    // Ensure function caller is an admin
+    if (context.auth.token?.type != "admin") {
+      throw new functions.https.HttpsError(
+        "permission-denied",
+        "Not enough permissions to delete user"
+      );
+    }
+    try {
+      const userRef = await db.users.where("type", "==", "participant").get();
+      const users = userRef.docs
+        .filter((doc) => doc.data().name !== null)
+        .map((doc) => doc.data());
+      return users;
+    } catch (err: any) {
+      functions.logger.error(err);
+      throw new functions.https.HttpsError(
+        "unknown",
+        "Unknown error occurred while listing users."
+      );
+    }
+  });
