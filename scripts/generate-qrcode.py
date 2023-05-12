@@ -41,7 +41,7 @@ def main(
 
     # Ensure that the save directory exists
     admin_path = Path(qr_save_dir) / "admin"
-    participant_path = Path(qr_save_dir) / "participant"
+    participant_path = Path(qr_save_dir) / "participant" / "strip"
     booth_path = Path(qr_save_dir) / "booth"
 
     if not admin_path.exists():
@@ -61,7 +61,7 @@ def main(
         data = qr_prefix + cid
 
         img = qrcode.make(data)
-        img.save(str(path_dict[role] / f"{idx+1}.png"))
+        img.save(str(path_dict[role] / f"{idx + 1}.png"))
 
     for booth_id, booth_name in BOOTHS_INFO.items():
         data = booth_id

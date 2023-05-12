@@ -19,6 +19,7 @@ export default function Redeem() {
   let [name, setName] = useState('')
   let [stamps, setStamps] = useState(0)
   let [prizes, setPrizes] = useState([])
+  let [unredeem, setUnredeem] = useState([])
 
   function userVerify(id) {
     getRole(id).then((role) => {
@@ -40,6 +41,9 @@ export default function Redeem() {
     const func = httpsCallable(functions, 'user-getInfo')
     func({ cid: idn }).then((r) => {
       setStamps(r.data.stampCount)
+      // only show unredeemed prizes from array object
+      const unredeemed = r.data.prizes.filter((p) => p.redeemed === false)
+      setUnredeem(unredeemed)
     })
   }
 
@@ -89,7 +93,8 @@ export default function Redeem() {
           <div className="mt-5 space-y-5">
             <StampsCounter count={stamps} />
             <Prize stamps={stamps} click={retrieveInfo}></Prize>
-            <Prizes title="PRIZES" list={prizes}></Prizes>
+            <Prizes title="UNREDEEMED" list={unredeem}></Prizes>
+            <Prizes title="PRIZES AVAILABLE" list={prizes}></Prizes>
             <Button href="/participant" className="mt-3 w-full">
               Back
             </Button>

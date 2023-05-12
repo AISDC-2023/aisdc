@@ -46,6 +46,6 @@ export interface StampSchema {
 
 export enum StampTypeCount {
   booth = 1,
-  event = 2,
+  event = 3,
   workshop = 5,
 }

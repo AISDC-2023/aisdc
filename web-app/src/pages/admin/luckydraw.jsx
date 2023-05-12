@@ -105,6 +105,8 @@ const Luckydraw = () => {
         <div className="mt-3 space-x-4 flex justify-center">
           <Button onClick={() => setNames(shuffle(names))}> Shuffle </Button>
           <Button onClick={startRaffle}> Start </Button>
+        </div>
+        <div className="mt-3 space-x-4 flex justify-center">
           <Button className="button-outline" onClick={restartRaffle}> Next </Button>
           <Button className="button-outline" onClick={resetNames}> Reset Names </Button>
         </div>
