@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ContainerMobile } from '@/components/ContainerMobile'
+import { ContainerAdmin } from '@/components/ContainerAdmin'
 import { Button } from '@/components/Button'
 import { Heading } from '@/components/Heading'
 import shuffle from 'lodash/shuffle'
@@ -11,7 +11,7 @@ const userlistfunc = httpsCallable(functions, 'user-list')
 const userliststampfunc = httpsCallable(functions, 'user-listStamp')
 
 const Luckydraw = () => {
-  const [names, setNames] = useState([]) // The data of names is used for display
+  const [names, setNames] = useState([]) // The data from names is used for display
   const [names2, setNames2] = useState([]) // This is used to save the names of those who have not won anything
   const [names3, setNames3] = useState([]) // This has all the names. Used as a constant if we want to reset names
   const [initialLoad, setInitialLoad] = useState(false)
@@ -66,11 +66,9 @@ const Luckydraw = () => {
     
     if (names.length <= 1) {
       return;
-    }
-  
+    }  
     const randomIndex = Math.floor(Math.random() * names.length);
-    const filteredNames = names.filter((_, index) => index !== randomIndex);
-  
+    const filteredNames = names.filter((_, index) => index !== randomIndex);  
     setNames(filteredNames);
     setInitialLoad(true);
   }
@@ -95,7 +93,7 @@ const Luckydraw = () => {
 
   return (
     <>
-      <ContainerMobile>
+      <ContainerAdmin>
         <Button href="/admin" style={{ textDecoration: 'none' }}>
           {' '}Back{' '}
         </Button>
@@ -151,8 +149,7 @@ const Luckydraw = () => {
             </Heading>
           </div>
         </Transition>
-
-      </ContainerMobile>
+      </ContainerAdmin>
     </>
   )
 }
