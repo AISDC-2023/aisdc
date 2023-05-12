@@ -94,7 +94,7 @@ export default function Redeem() {
             <StampsCounter count={stamps} />
             <Prize stamps={stamps} click={retrieveInfo}></Prize>
             <Prizes title="UNREDEEMED" list={unredeem}></Prizes>
-            <Prizes title="PRIZES" list={prizes}></Prizes>
+            <Prizes title="PRIZES AVAILABLE" list={prizes}></Prizes>
             <Button href="/participant" className="mt-3 w-full">
               Back
             </Button>
