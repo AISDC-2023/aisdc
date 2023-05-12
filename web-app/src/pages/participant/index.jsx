@@ -92,7 +92,7 @@ export default function Participant() {
               className="w-full items-center"
               type="button"
             >
-              <span>Scan for tickets!</span>
+              <span>Scan for stamps!</span>
               <CameraIcon className="ml-3 h-6 w-6" />
             </Button>
             <Button
