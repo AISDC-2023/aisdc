@@ -25,7 +25,7 @@ export function Prize(props) {
           .then((r) => {
             // emit event to parent to get stamp count again
             props.click()
-            const s = `Congratuations! You won ${r.data.pid.name}`
+            const s = `Congratulations! You won ${r.data.pid.name}`
             setPrize(s)
             setIsDrawn(true)
           })
