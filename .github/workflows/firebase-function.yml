@@ -2,7 +2,7 @@ name: Deploy to Firebase Function on push to master
 on:
   push:
     branches:
-      - main
+      - disabled
     paths:
       - "functions/**"
       - ".firebaserc"
