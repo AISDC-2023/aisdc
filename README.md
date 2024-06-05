@@ -1,5 +1,5 @@
 # aisdc
-This repository contains the companion web application for Track 3: AI Playground in [AI Student Developer Conference 2023](https://epoch.aisingapore.org/event/ai-student-developer-conference-2023/).
+This repository contains the companion web application for Track 3: AI Playground in [AI Student Developer Conference 2023](https://learn.aisingapore.org/aisdc2024/).
 
 The application is developed using Firebase product and services which includes [Firebase Authentication](https://firebase.google.com/docs/auth), [Firebase Cloud Firestore](https://firebase.google.com/docs/firestore), [Firebase Cloud Functions](https://firebase.google.com/docs/functions), and [Firebase Hosting](https://firebase.google.com/docs/hosting).
 
